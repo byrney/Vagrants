@@ -1,0 +1,17 @@
+DEPENDENCIES
+  sybase
+    path: ../../../tmp/chef-sybase
+
+GRAPH
+  7-zip (1.0.2)
+    windows (>= 1.2.2)
+  ark (0.9.0)
+    7-zip (>= 0.0.0)
+    windows (>= 0.0.0)
+  chef_handler (1.2.0)
+  selinux (0.9.0)
+  sybase (0.1.0)
+    ark (>= 0.0.0)
+    selinux (>= 0.0.0)
+  windows (1.39.1)
+    chef_handler (>= 0.0.0)

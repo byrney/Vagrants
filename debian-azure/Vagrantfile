@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+# Arguably most complete description of setup
+# https://github.com/philbert/vagrant-azure-example
+
+Vagrant.configure('2') do |config|
+
+    vm_name = Dir.pwd.split('/').last
+    #
+    # box
+    #
+    config.vm.box               = 'azure'
+    config.vm.box_url           = 'https://github.com/msopentech/vagrant-azure/raw/master/dummy.box'
+    config.ssh.private_key_path = File.expand_path('~/.ssh/azure')
+    config.ssh.forward_env = ["LANG"]
+    config.vm.guest = :debian   # guest detection gives linux but needs to be debian for rsync install
+    #
+    # Provider
+    #
+    config.vm.provider :azure do |azure|
+        azure.mgmt_certificate   = File.expand_path('~/.azure/mgmt.pem')
+        azure.mgmt_endpoint      = 'https://management.core.windows.net'
+        azure.subscription_id    = File.read(File.expand_path('~/.azure/subscription.txt')).strip()
+        azure.vm_image           = '6a83c2d016534a7a917bcd21b6e1c0c9__Debian-8-amd64-20160201.0'
+        azure.storage_acct_name  = vm_name.tr('-', '')
+        azure.vm_name            = vm_name
+        azure.cloud_service_name = vm_name + '-service'
+        azure.vm_user            = 'vagrant' # defaults to 'vagrant' if not provided
+        azure.vm_location        = 'North Europe' # e.g., West US
+        azure.private_key_file   = File.expand_path('~/.ssh/azure')
+    end
+
+    #
+    # Machines
+    #
+    config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", type: "rsync", disabled: true
+    config.vm.provision "fix-no-tty", type: "shell" do |s|
+        s.privileged = false
+        s.inline     = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+    config.vm.hostname = vm_name
+    #config.vm.provision("base.sh", type: :shell, path: '../provision/base.sh')
+    # host_user = ENV['USER'] || ENV['USERNAME']
+    # host_key = File.read(File.expand_path("~/.ssh/id_rsa.pub"))
+    # config.vm.provision("users.sh", type: :shell, path: '../provision/users.sh', args: [host_user,host_key])
+
+    config.vm.provision "chef_solo" do |chef|
+        chef.add_recipe 'debian-base-box'
+        chef.version = '12.7'   # latest fails.  version needs vagrant 1.8.1 min
+    end
+    config.vm.boot_timeout = 360
+
+end

@@ -1,0 +1,17 @@
+DEPENDENCIES
+  chocolatey
+    git: https://github.com/chocolatey/chocolatey-cookbook.git
+    revision: db1936f3bf4659a5b5d701bdcc4e9a952ed8cbc0
+  winbase
+    git: https://github.com/byrney/chef-winbase.git
+    revision: a170d31595986920b7fa9847ca5883978e529c4a
+
+GRAPH
+  chef_handler (1.2.0)
+  chocolatey (0.6.2)
+    windows (~> 1.38)
+  winbase (0.1.0)
+    chocolatey (>= 0.5.2)
+    windows (>= 0.0.0)
+  windows (1.39.1)
+    chef_handler (>= 0.0.0)

@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# vi: set sw=2 :
+
+require_relative '../provision/provision-helpers.rb'
+
+VAGRANTFILE_API_VERSION = "2"
+
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.vm.extend(ProvisionHelpers)
+    vm_name = Dir.pwd.split('/').last
+    #
+    # box
+    #
+    config.vm.box = "win81"
+    config.vm.communicator = "winrm"
+    config.winrm.retry_limit = 30
+    config.winrm.retry_delay = 10
+    config.vm.guest = :windows   # guest detection fails: https://github.com/mitchellh/vagrant/pull/4996
+    #
+    # provider
+    #
+    config.vm.provider "virtualbox" do |v|
+        v.name = vm_name
+        v.gui = true
+        v.customize ["modifyvm", :id, "--memory", "2048"]
+        v.customize ["modifyvm", :id, "--vram", "256"]
+    end
+    #
+    # network
+    #
+    config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 5985, host: 5985, id: "winrm", auto_correct: true
+    config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 3389, host: 3389, id: "rdp", auto_correct: true
+    #
+    # Provision
+    #
+    config.vm.provision "chef_solo" do |chef|
+        chef.version = '12.7'   # latest fails.  version needs vagrant 1.8.1 min
+        chef.add_recipe 'winbase'
+        chef.json = { :users => { :username => 'vagrant' } }
+    end
+
+    pslib = "../provision/pslib.ps1"
+    config.vm.provision_ps(pslib, "../provision/disable-browser-choice.ps1", "../provision/disable-windows-key.ps1")
+    config.vm.provision :shell, path: "../provision/Install-Chocolatey.ps1"
+    # config.vm.provision_ps(pslib, "../provision/choc-settings.ps1")
+    # config.vm.provision_ps(pslib, "../provision/choc-utils.ps1", "../provision/choc-ruby.ps1")
+    # config.vm.provision :shell, path: "../provision/user_config.cmd", args: %w(Robert byrney)
+    # config.vm.provision_gem('bundler')
+    # config.vm.provision_ps(pslib,  "../provision/choc-dotnetdev.ps1")
+    # config.vm.provision_ps(pslib, "../provision/choc-dexdev.ps1")
+
+    host_user = ENV['USER'] || ENV['USERNAME']
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
+
+    config.vm.boot_timeout = 500
+end

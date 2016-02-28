@@ -1,0 +1,6 @@
+source "https://supermarket.chef.io"
+
+#metadata
+
+#cookbook 'chef-sybase', git: 'https://github.com/jbianquetti/chef-sybase'
+cookbook 'sybase', path: '/Users/rob/tmp/chef-sybase'

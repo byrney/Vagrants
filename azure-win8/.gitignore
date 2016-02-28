@@ -1,0 +1,6 @@
+*.pem
+*.cer
+*.key
+*.pub
+.vagrant
+azure.settings

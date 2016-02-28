@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+
+# Arguably most complete description of setup
+# https://github.com/philbert/vagrant-azure-example
+
+require_relative '../provision/provision-helpers.rb'
+
+def create_password()
+    # min 8 characters. should contain a lower case letter,
+    # an uppercase letter, a number and a special character
+    filename = 'vm_password.txt'
+    unless(File.exists?(filename))
+        pass = 'P%' + rand(36**12).to_s(36)
+        File.write(filename, pass)
+    end
+    File.read(filename).strip()
+end
+
+Vagrant.configure('2') do |config|
+
+    config.vm.extend(ProvisionHelpers)
+    vm_name = Dir.pwd.split('/').last
+    #
+    # box
+    #
+    config.vm.box               = 'azure'
+    config.vm.box_url           = 'https://github.com/msopentech/vagrant-azure/raw/master/dummy.box'
+    #
+    # Provider
+    #
+    config.vm.provider :azure do |azure|
+        azure.mgmt_certificate   = File.expand_path('~/.azure/mgmt.pem')
+        azure.mgmt_endpoint      = 'https://management.core.windows.net'
+        azure.subscription_id    = File.read(File.expand_path('~/.azure/subscription.txt')).strip()
+        azure.vm_image           = '03f55de797f546a1b29d1b8d66be687a__Windows-8.1-Enterprise-N-x64-en.us-201512.21'
+#        azure.storage_acct_name  = vm_name.tr('-', '')
+        azure.vm_name            = vm_name
+        azure.cloud_service_name = vm_name + '-service'
+        azure.vm_user            = 'vagrant'           # defaults to 'vagrant' if not provided
+        azure.vm_location        = 'North Europe'      # e.g., West US
+        azure.vm_password        = create_password()
+        azure.winrm_transport    = [ 'http', 'https' ] # this will open up winrm ports on both http (5985) and http (5986) ports
+        azure.tcp_endpoints      = '3389:53389'        # opens the Remote Desktop internal port that listens on public port 53389. Without this, you cannot RDP to a Windows VM.
+    end
+
+    #
+    # Machines
+    #
+    pslib = "../provision/pslib.ps1"
+    config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", type: "rsync", disabled: true
+    config.vm.hostname = vm_name
+    config.vm.provision("chocolatey", type: "shell", path: "../provision/Install-Chocolatey.ps1")
+    config.vm.provision_ps(pslib, "../provision/choc-utils.ps1")
+    config.vm.provision("user_config", type: "shell", path: "../provision/user_config.cmd", args: 'vagrant')
+    config.vm.boot_timeout = 600
+end
+

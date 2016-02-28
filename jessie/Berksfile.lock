@@ -1,0 +1,6 @@
+DEPENDENCIES
+  debian-dev-box
+    path: ../provision/debian-dev-box
+
+GRAPH
+  debian-dev-box (0.1.0)

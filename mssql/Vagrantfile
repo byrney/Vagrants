@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+require_relative '../provision/provision-helpers.rb'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    vm_name = Dir.pwd.split('/').last
+    config.vm.extend(ProvisionHelpers)
+    config.vm.box = "win81"
+    config.vm.communicator = "winrm"
+    config.vm.guest = :windows
+    config.vm.provider "virtualbox" do |v|
+        v.name = vm_name
+        v.gui = true
+        v.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+
+    #config.vm.network :forwarded_port, guest: 3389, host: 3389, id: 'rdp'
+
+    config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 5985, host: 5985, id: "winrm", auto_correct: true
+    config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 1433, host: 1433, id: "mssql", auto_correct: false
+
+    # for provisioning we need:
+
+    pslib = "../provision/pslib.ps1"
+    config.vm.provision_ps(pslib, "../provision/disable-browser-choice.ps1", "../provision/disable-windows-key.ps1")
+    config.vm.provision :shell, path: "../provision/Install-Chocolatey.ps1"
+    config.vm.provision_ps(pslib, "../provision/choc-settings.ps1")
+    config.vm.provision_ps(pslib, "../provision/choc-utils.ps1")
+    config.vm.provision :shell, path: "../provision/user_config.cmd", args: %w(Robert byrney)
+
+    config.vm.provision :shell, path: "choc-mssql.ps1"
+
+    host_user = ENV['USER'] || ENV['USERNAME']
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
+    config.vm.synced_folder("/Users/#{host_user}/Downloads/Software/Windows", '/Downloads')
+
+end

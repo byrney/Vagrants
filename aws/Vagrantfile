@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+amis = {:ubuntu => "ami-748e2903", :jessie => "ami-02ec4a75", :tpwc => "ami-46c96831"}
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "ubuntu_aws"
+    config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+    config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", type: "rsync"
+    config.ssh.username = "admin"
+    config.ssh.proxy_command = 'ssh -q tools.tpwc-dex.com "nc %h 22"'
+    config.ssh.private_key_path = "~/.ssh/tpwc-ec2-eu-nopass.pem"
+    config.vm.provider :aws do |aws|
+        # basics
+        aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
+        aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
+        aws.region = ENV['AWS_REGION']
+        aws.keypair_name = "tpwc-ec2-eu"
+        aws.ssh_host_attribute = :private_ip_address
+        # instance
+        aws.instance_type = "t2.micro"
+        aws.ami = amis[:jessie]
+        aws.subnet_id = "subnet-29b5ab41"
+        # security
+        aws.security_groups = ["sg-aa0ae6c5", "sg-2f56b540"]
+        aws.iam_instance_profile_name = "registerHostRole"
+        #aws.instance_ready_timeout = 120
+    end
+    config.vm.provision(:shell, path: '../provision/base.sh')
+    # route53 dns registration
+    config.vm.provision(:shell, path: '../provision/aws-sdk.sh')
+    config.vm.provision(:shell, path: 'userdata-debian-default.rb')
+    # development tools
+    config.vm.provision(:shell, path: '../provision/dev.sh')
+
+    #
+    # Machines
+    #
+
+    config.vm.define :one, autostart: false do |m|
+        m.vm.provider :aws do |ma|
+            ma.tags = { 'Name' => 'dev-tst-vagone'}
+        end
+    end
+
+    config.vm.define :two, autostart: false do |m|
+        m.vm.provider :aws do |ma|
+            ma.tags = { 'Name' => 'dev-tst-vagtwo'}
+        end
+    end
+end
