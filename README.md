@@ -2,25 +2,37 @@
 Vagrant Boxes
 =============
 
-This is a collection of vagrant setups that I use. Previously these were in
-seperate repos with a lot of duplication in the provisioning setup.  Now I
-have them in one repo with all the provisiong scripts shared.
+This is a collection of vagrant setups that I use. For debian 8 or windows on 
+some combination of VirtualBox, AWS and Azure.
 
-It's still some way from my ideal as there is a mixture of chef-apply,
-chef-solo and hand-written scripts. Partly that's necessity since chef
-provisioning does not work on the aws and azure machines. Partly it's because
-I have not migrated everything over. Where manual scripts are used it's
-apt-get for debian and powershell/chocolatey for windows.
+Previously these were in seperate repos with a lot of duplication in the
+provisioning setup.  Now I have them in one repo with all the provisiong
+scripts shared.
+
+It's still some way from my ideal as there is a mixture of and hand-written
+scripts.  Partly it's because I have not migrated everything
+over. Where manual scripts are used it's apt-get for debian and
+powershell/chocolatey for windows.
 
 In all cases the vagrant user is set up with the usual password. Networking is
 largely NAT but open ports are always mapped to the host loopback address so
 they are not exposed.
 
-Some are script base provisioning but use chef.  For chef ones they need
+For chef-solo provisioning the host needs
 
-* ChefDk installed on the host  (for berks install)
+* berkshelf  (either via rubygems or by installing chefdk)
 * vagrant-berkshelf plugin
 
+AWS boxes need
+
+* awscli
+* AWS environment variables
+
+Azure boxes need
+
+* azure-cli  (or equivalent)
+* Download azure account settings
+* vagrant-azure plugin
 
 Boxes
 ----
@@ -57,7 +69,8 @@ some local folders and runs the scripts from there. It also needs the base box
 to be hacked a bit to get it to provision more than once.
 
 Change the provScript in
-.vagrant.d/boxes/{boxname}/{version}/include/_Vagrantfile to this
+`$HOME/.vagrant.d/boxes/{boxname}/{version}/include/_Vagrantfile` to this
+
 
 ```
 $provScript = <<__EOF__

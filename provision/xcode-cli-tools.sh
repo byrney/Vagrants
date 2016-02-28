@@ -1,20 +1,21 @@
-#!/bin/sh
- 
+#!/bin/bash
 
-[[ -e /usr/local/bin/git ]] && exit 0
+# do nothing if tools already installed
+xcode-select -p 2> /dev/null && exit 0
+
 # Get and install Xcode CLI tools
 OSX_VERS=$(sw_vers -productVersion | awk -F "." '{print $2}')
- 
+
 # on 10.9+, we can leverage SUS to get the latest CLI tools
 if [ "$OSX_VERS" -ge 9 ]; then
-    # create the placeholder file that's checked by CLI updates' .dist code 
+    # create the placeholder file that's checked by CLI updates' .dist code
     # in Apple's SUS catalog
     touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
     # find the CLI Tools update
     PROD=$(softwareupdate -l | grep "\*.*Command Line" | head -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
     # install it
-    softwareupdate -i "$PROD" -v
- 
+    softwareupdate -i "$PROD"
+
 # on 10.7/10.8, we instead download from public download URLs, which can be found in
 # the dvtdownloadableindex:
 # https://devimages.apple.com.edgekey.net/downloads/xcode/simulators/index-3905972D-B609-49CE-8D06-51ADC78E07BC.dvtdownloadableindex
@@ -24,9 +25,9 @@ else
 
     TOOLS=clitools.dmg
     curl "$DMGURL" -o "$TOOLS"
-    TMPMOUNT=`/usr/bin/mktemp -d /tmp/clitools.XXXX`
+    TMPMOUNT=$(/usr/bin/mktemp -d /tmp/clitools.XXXX)
     hdiutil attach "$TOOLS" -mountpoint "$TMPMOUNT"
-    installer -pkg "$(find $TMPMOUNT -name '*.mpkg')" -target /
+    installer -pkg "$(find "$TMPMOUNT" -name '*.mpkg')" -target /
     hdiutil detach "$TMPMOUNT"
     rm -rf "$TMPMOUNT"
     rm "$TOOLS"
