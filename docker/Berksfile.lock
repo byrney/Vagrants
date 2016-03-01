@@ -1,0 +1,9 @@
+DEPENDENCIES
+  apt
+  debian-docker
+    path: ../provision/debian-docker
+
+GRAPH
+  apt (3.0.0)
+  debian-docker (0.1.0)
+    apt (>= 3.0.0)
