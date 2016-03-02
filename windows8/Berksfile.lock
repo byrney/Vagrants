@@ -1,6 +1,7 @@
 DEPENDENCIES
   chocolatey
-    path: ../../../src/home/cocolatey-cookbook
+    git: https://github.com/chocolatey/chocolatey-cookbook.git
+    revision: 41cf16a515c74f149dd047788f21e666e22f9df9
   winbase
     path: ../provision/winbase
 
@@ -11,5 +12,5 @@ GRAPH
   winbase (0.1.0)
     chocolatey (>= 0.5.2)
     windows (>= 0.0.0)
-  windows (1.39.1)
+  windows (1.39.2)
     chef_handler (>= 0.0.0)
