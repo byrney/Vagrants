@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     config.vm.provision "chef_solo" do |chef|
-        chef.add_recipe 'debian-docker'
+        chef.add_recipe 'debian-dev-box::postgres-xl'
     end
 
     #config.vm.provision(:shell, path: '../provision/mono.sh')
@@ -43,8 +43,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision("autoremove", type: :shell, inline: 'apt-get -y autoremove')
 
-    config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
-    config.vm.network "forwarded_port", guest: 9042, host: 9042, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 30001, host: 30001, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 30002, host: 30002, host_ip: "127.0.0.1"
 
 
 end

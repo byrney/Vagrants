@@ -1,0 +1,10 @@
+
+add gtm master gtm localhost 20001 /home/pgxl/DATA/gtm
+monitor all
+add coordinator master coord1 localhost 30001 30011 /home/pgxl/DATA/coord_master.1 none none
+add coordinator master coord2 localhost 30002 30012 /home/pgxl/DATA/coord_master.2 none none
+monitor all
+add datanode master dn1 localhost 40001 40011 /home/pgxl/DATA/dn_master.1 none none none
+add datanode master dn2 localhost 40002 40012 /home/pgxl/DATA/dn_master.2 none none none
+monitor all
+

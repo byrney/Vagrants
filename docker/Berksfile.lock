@@ -1,5 +1,4 @@
 DEPENDENCIES
-  apt
   debian-docker
     path: ../provision/debian-docker
 
