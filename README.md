@@ -18,10 +18,13 @@ In all cases the vagrant user is set up with the usual password. Networking is
 largely NAT but open ports are always mapped to the host loopback address so
 they are not exposed.
 
-For chef-solo provisioning the host needs
+Host Setup
+----------
 
-* berkshelf  (either via rubygems or by installing chefdk)
-* vagrant-berkshelf plugin
+For provisioning the host needs
+
+* berkshelf  (by installing chefdk)
+* vagrant-berkshelf plugin   `vagrant plugin install vagrant-berkshelf`
 
 AWS boxes need
 

@@ -2,14 +2,12 @@
 # vi: set ft=ruby :
 # vi: set sw=2 :
 
-require_relative '../provision/provision-helpers.rb'
 
 VAGRANTFILE_API_VERSION = "2"
 
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-    config.vm.extend(ProvisionHelpers)
     vm_name = Dir.pwd.split('/').last
     #
     # box
@@ -39,19 +37,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "chef_solo" do |chef|
         chef.version = '12.7'   # latest fails.  version needs vagrant 1.8.1 min
         chef.add_recipe 'winbase::default'
+        chef.add_recipe 'winbase::users'
         chef.add_recipe 'winbase::dotnet'
         chef.json = { :users => { :username => 'vagrant' } }
     end
-
-    # pslib = "../provision/pslib.ps1"
-    # config.vm.provision_ps(pslib, "../provision/disable-browser-choice.ps1", "../provision/disable-windows-key.ps1")
-    # config.vm.provision :shell, path: "../provision/Install-Chocolatey.ps1"
-    # config.vm.provision_ps(pslib, "../provision/choc-settings.ps1")
-    # config.vm.provision_ps(pslib, "../provision/choc-utils.ps1", "../provision/choc-ruby.ps1")
-    # config.vm.provision :shell, path: "../provision/user_config.cmd", args: %w(Robert byrney)
-    # config.vm.provision_gem('bundler')
-    # config.vm.provision_ps(pslib,  "../provision/choc-dotnetdev.ps1")
-    # config.vm.provision_ps(pslib, "../provision/choc-dexdev.ps1")
 
     host_user = ENV['USER'] || ENV['USERNAME']
     config.vm.synced_folder("/Users/#{host_user}", '/Host')

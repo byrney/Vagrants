@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+END {
+    puts <<-EOF
+        hostname: localhost
+        port: 49161
+        sid: xe
+        username: system
+        password: oracle
+    EOF
+}
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Box
+    #
+    config.vm.box = "ARTACK/debian-jessie"
+    config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
+    config.vm.box_check_update = false
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+       vb.gui = true
+       vb.memory = 2048
+       vb.name = Dir.pwd.split('/').last
+     end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = Dir.pwd.split('/').last
+    config.ssh.forward_x11 = true
+    config.ssh.insert_key = false
+    config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 1521, host: 49161, id: "oracle", auto_correct: false
+    host_user = ENV['USER'] || ENV['USERNAME']
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
+
+    #
+    # Provision
+    #
+    config.vm.provision "chef_solo" do |chef|
+        #chef.add_recipe 'debian-base-box'
+        chef.add_recipe 'debian-dev-box::oraclexe'
+    end
+
+end

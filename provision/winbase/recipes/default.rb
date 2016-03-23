@@ -22,12 +22,28 @@ registry_key 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layou
     values [{:name => 'Scancode Map', :type => :binary, :data => "\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00[\xE0\x00\x00\x00\x00" }]
 end
 
-%w{ toolsroot sysinternals 7zip vim cmdermini.portable }.each do |pack|
+# 7zip 15.14
+# 7zip.commandline 15.14
+# 7zip.install 15.14
+# chocolatey 0.9.9.11
+# cmdermini.portable 1.1.4.101
+# git.install 2.7.2
+# NuGet.CommandLine 3.3.0
+# ruby 2.1.6
+# ruby2.devkit 4.7.2.2013022402
+# sysinternals 2016.02.02
+# toolsroot 0.1.0
+# vcredist2010 10.0.40219.1
+# vim 7.4.1525
+# VisualStudio2015Community 14.0.24720.01
+
+%w{ toolsroot 7zip vim cmdermini.portable }.each do |pack|
       chocolatey pack
 end
 
 chocolatey 'git.install' do
     options ({ 'params' => "'/GitAndUnixToolsOnPath'" })
+    version '2.7.2'
 end
 
 windows_shortcut 'c:/Users/Public/Desktop/GVim.lnk' do
@@ -43,37 +59,15 @@ windows_shortcut 'c:/Users/Public/Desktop/Cmder.lnk' do
   description "Cmder"
 end
 
-user=node['users']['username']
-
-git "Users/#{user}/Config" do
-    repository 'https://github.com/byrney/Config.git'
-    notifies :run, 'execute[install-config]', :immediately
-end
-
-
-execute "install-config" do
-    u = user
-    h = "c:\\Users\\#{u}"
-    #creates "#{h}/.vimrc"
-    cwd "#{h}\\Config"
-    command 'bash install.sh rob.cfg'
-    environment 'HOME' => "c:\\Users\\#{u}"
-    action :nothing
-end
-
 # start-process -wait -verb runas -argumentlist "ruby -version 2.1.6" cinst
 chocolatey 'ruby' do
     action :install
     version '2.1.6'
 end
 
-#start-process -wait -verb runas -argumentlist "rubygems -version 2.4.6" cinst
-# chocolatey 'rubygems' do
-#     action :install
-#     version '2.4.6'
-# end
-
+# ruby2.devkit 4.7.2.2013022402
 chocolatey 'ruby2.devkit' do
      action :install
+     version '4.7.2.2013022402'
 end
 
