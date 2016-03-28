@@ -6,12 +6,20 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     #
+    # host
+    #
+    host_user = ENV['USER'] || ENV['USERNAME']
+    host_key_file = "/Users/#{host_user}/.ssh/id_vagrant"
+    if(File.exist?(host_key_file))
+        priv_key = File.read(host_key_file) || nil
+        pub_key = File.read("#{host_key_file}.pub") || nil
+    end
+    #
     # Box
     #
     config.vm.box = "ARTACK/debian-jessie"
     config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
     config.vm.box_check_update = false
-
 
     #
     # Provider
@@ -23,17 +31,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
        vb.linked_clone = true
      end
 
-    host_user = ENV['USER'] || ENV['USERNAME']
-    config.vm.synced_folder("/Users/#{host_user}", '/Host')
-
     #
     # Networking
     #
     config.vm.hostname = Dir.pwd.split('/').last
     config.ssh.forward_x11 = true
     config.ssh.insert_key = false
-    config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
-    config.vm.network "forwarded_port", guest: 9042, host: 9042, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1", id: 'port8080'
+    config.vm.network "forwarded_port", guest: 9042, host: 9042, host_ip: "127.0.0.1", id: 'port9042'
+
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
 
     #
     # Provision
@@ -45,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision "chef_solo" do |chef|
         chef.add_recipe 'debian-dev-box'
-        chef.add_recipe 'debian-base-box'
+        chef.add_recipe 'debian-base-box::default'
     end
 
     config.vm.provision "chef_apply" do |chef|

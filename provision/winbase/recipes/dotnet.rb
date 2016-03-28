@@ -6,7 +6,7 @@ chocolatey 'Nuget.CommandLine'
 
 #make-link "c:\Users\Public\Desktop\VS2015" "$programfiles\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe"
 windows_shortcut 'c:/Users/Public/Desktop/VS2015.lnk' do
-  vb = '$programfiles\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe'
+  vb = 'c:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe'
   target vb
   description "VS2015"
 end

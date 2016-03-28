@@ -54,6 +54,9 @@ sybase       -- sysbase 16 on debian on virtualbox  (this is a WIP)
 windows10    -- windows 10
 windows8     -- windows 8 workstation setup with devtools on virtualbox
 yosemite     -- OSX build with automated tools and users on virtualbox
+oracle-xe    -- An oracle XE install on debian
+postgres-xl  -- Two postgres XL nodes on a debian VM
+docker       -- Vanilla docker setup on debian
 ```
 
 

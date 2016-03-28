@@ -16,6 +16,11 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     #
+    # Host
+    #
+    host_user = ENV['USER'] || ENV['USERNAME']
+
+    #
     # Box
     #
     config.vm.box = "ARTACK/debian-jessie"
@@ -36,17 +41,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     config.vm.hostname = Dir.pwd.split('/').last
     config.ssh.forward_x11 = true
+    config.ssh.forward_agent = true
     config.ssh.insert_key = false
     config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 1521, host: 49161, id: "oracle", auto_correct: false
-    host_user = ENV['USER'] || ENV['USERNAME']
     config.vm.synced_folder("/Users/#{host_user}", '/Host')
 
     #
     # Provision
     #
     config.vm.provision "chef_solo" do |chef|
-        #chef.add_recipe 'debian-base-box'
+        chef.add_recipe 'debian-base-box::users'
         chef.add_recipe 'debian-dev-box::oraclexe'
+        chef.json = { :users => { :username => 'vagrant' } }
     end
 
 end

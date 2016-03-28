@@ -3,4 +3,18 @@ DEPENDENCIES
     path: ../provision/debian-dev-box
 
 GRAPH
+  apt (3.0.0)
+  ark (1.0.1)
+    build-essential (>= 0.0.0)
+    seven_zip (>= 0.0.0)
+    windows (>= 0.0.0)
+  build-essential (3.0.0)
+    seven_zip (>= 0.0.0)
+  chef_handler (1.3.0)
   debian-dev-box (0.1.0)
+    apt (>= 0.0.0)
+    ark (>= 0.0.0)
+  seven_zip (2.0.0)
+    windows (>= 1.2.2)
+  windows (1.39.2)
+    chef_handler (>= 0.0.0)
