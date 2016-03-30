@@ -57,6 +57,8 @@ yosemite     -- OSX build with automated tools and users on virtualbox
 oracle-xe    -- An oracle XE install on debian
 postgres-xl  -- Two postgres XL nodes on a debian VM
 docker       -- Vanilla docker setup on debian
+pglogical    -- postgres and pg_logical  (In progress)
+citus        -- citus db try-out (one master, one worker)
 ```
 
 
