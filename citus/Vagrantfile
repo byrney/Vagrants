@@ -3,45 +3,79 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
+Instance = Struct.new(:name, :ip, :port, :role)
+Box = Struct.new(:name, :ip, :instances)
+
+BOXES = [
+    Box.new("primary",   "192.168.50.10", [
+        Instance.new("master",    "192.168.50.10", 9700, :master).to_h,
+        Instance.new("work01",    "192.168.50.10", 9701, :worker).to_h,
+    ]),
+    Box.new("secondary", "192.168.50.11", [
+        Instance.new("work02",  "192.168.50.11", 9700, :worker).to_h,
+        Instance.new("work03",  "192.168.50.11", 9701, :worker).to_h,
+    ])
+]
+
+INSTANCES =  BOXES.map {|b| b.instances }.flatten.map(&:to_h)
+WORKERS = INSTANCES.select {|i| i[:role] == :worker}
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     #
     # Box
     #
-    config.vm.box = "ARTACK/debian-jessie"
-    config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
+    config.vm.box              = "ARTACK/debian-jessie"
+    config.vm.box_url          = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
     config.vm.box_check_update = false
 
     #
     # Provider
     #
     config.vm.provider "virtualbox" do |vb|
-        vb.gui = true
-        vb.memory = 2048
-        vb.name = Dir.pwd.split('/').last
+        vb.gui          = true
+        vb.memory       = 2048
         vb.linked_clone = true
     end
 
     #
     # Networking
     #
-    config.vm.hostname = Dir.pwd.split('/').last
+    config.vm.hostname     = Dir.pwd.split('/').last
     config.ssh.forward_x11 = true
-    config.ssh.insert_key = false
-    config.vm.network "forwarded_port", guest: 9700, host: 9700, host_ip: "127.0.0.1", id: 'citus_master'
-    config.vm.network "forwarded_port", guest: 9701, host: 9701, host_ip: "127.0.0.1", id: 'citus_worker'
+    config.ssh.insert_key  = false
+    # config.vm.network "forwarded_port", guest: 9700, host: 9700, host_ip: "127.0.0.1", id: 'citus_master'
+    # config.vm.network "forwarded_port", guest: 9701, host: 9701, host_ip: "127.0.0.1", id: 'citus_worker'
+
 
     #
     # provision
     #
     config.vm.provision "fix-no-tty", type: "shell" do |s|
         s.privileged = false
-        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+        s.inline     = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
     end
 
-    config.vm.provision "chef_solo" do |chef|
-        chef.add_recipe 'debian-dev-box::citus'
-    end
+    #
+    # multi machine
+    #
+    BOXES.each do |b|
 
+        config.vm.define b.name do |m|
+            m.vm.network "private_network", ip: b.ip
+            m.vm.hostname = Dir.pwd.split('/').last + b.name
+
+            m.vm.provider "virtualbox" do |vb|
+                vb.name = "citus_#{b.name}"
+            end
+
+            config.vm.provision "chef_solo" do |chef|
+                chef.add_recipe 'debian-dev-box::citus'
+                chef.json = { :citus => {:instances =>  b.instances, :workers => WORKERS }}
+            end
+
+        end
+
+    end
 
 end
