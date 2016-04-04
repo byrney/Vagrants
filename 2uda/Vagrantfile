@@ -53,6 +53,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "chef_solo" do |chef|
         chef.add_recipe 'debian-dev-box'
         chef.add_recipe 'debian-base-box::default'
+        chef.add_recipe 'debian-base-box::xorg'
     end
 
     config.vm.provision "chef_apply" do |chef|

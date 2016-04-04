@@ -52,9 +52,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     config.vm.provision "chef_solo" do |chef|
+        chef.add_recipe 'debian-base-box::default'
+        chef.add_recipe 'debian-base-box::xorg'
         chef.add_recipe 'debian-base-box::users'
         chef.add_recipe 'debian-dev-box'
-        chef.add_recipe 'debian-base-box::default'
         chef.json = { :users => { :username => host_user, :priv_key => priv_key, :pub_key => pub_key } }
     end
 

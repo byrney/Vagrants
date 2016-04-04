@@ -13,13 +13,5 @@ execute "apt-update" do
     command "apt-get update > /tmp/apt-update.done"
 end
 BASE_PACKAGES = %w(git vim tmux zip silversearcher-ag )
-APP_PACKAGES  = %w(xorg openbox tint2)
-
 BASE_PACKAGES.each {|p| package p }
-APP_PACKAGES.each  {|p| package p }
-
-file "/etc/xdg/openbox/autostart" do
-    content "tint2 &\n"
-    action  :create
-end
 

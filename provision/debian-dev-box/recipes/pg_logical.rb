@@ -2,12 +2,10 @@
 package 'apt-transport-https'
 package 'ca-certificates'
 
-apt_repository "postgresql" do
-  uri "http://apt.postgresql.org/pub/repos/apt/"
-  distribution 'jessie-pgdg'
-  components ["main"]
-  key "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-end
+#
+# Postgres 9.5 install from PDG
+#
+include_recipe "#{cookbook_name}::postgres"
 
 apt_repository "2ndquadrant" do
   uri "http://packages.2ndquadrant.com/pglogical/apt/"
@@ -16,31 +14,33 @@ apt_repository "2ndquadrant" do
   key "http://packages.2ndquadrant.com/pglogical/apt/AA7A6805.asc"
 end
 
-package 'postgresql-9.5'
 package 'postgresql-9.5-pglogical'
-
-execute 'create-cluster-subs' do
-    command 'pg_createcluster -p 5433 9.5 subs'
-    creates '/etc/postgresql/9.5/subs'
-end
 
 NODES = {'subs' => 5433, 'main' => 5432}
 
+execute 'create-cluster-subs' do
+    command "pg_createcluster -p NODES['subs'] 9.5 subs"
+    creates '/etc/postgresql/9.5/subs'
+end
+
+
 ['subs', 'main'].each do |instance|
+
+    conf_dir = "#{conf_dir}/g"
 
     execute "stop-cluster-#{instance}" do
         command "pg_ctlcluster 9.5 #{instance} stop"
         only_if "pg_ctlcluster 9.5 #{instance} status"
     end
 
-    template "/etc/postgresql/9.5/#{instance}/pg_hba.conf" do
+    template "#{conf_dir}/pg_hba.conf" do
         source 'pg_hba.conf'
         owner 'postgres'
         group 'postgres'
         mode '0755'
     end
 
-    template "/etc/postgresql/9.5/#{instance}/postgresql.conf" do
+    template "#{conf_dir}/postgresql.conf" do
         source 'postgresql.conf'
         variables(:port => NODES[instance], :instance => instance)
         owner 'postgres'
@@ -54,12 +54,12 @@ NODES = {'subs' => 5433, 'main' => 5432}
 
     execute "create-user-#{instance}" do
         command "createuser -U postgres -p #{NODES[instance]} -s pgltest"
-        not_if %q(psql -U postgres -tAc "select 1 from pg_roles where rolname='pgltest'" | grep 1)
+        not_if %Q(psql -U postgres -p #{NODES[instance]} -tAc "select 1 from pg_roles where rolname='pgltest'" | grep 1)
     end
 
     execute "create-db-#{instance}" do
         command "createdb -U postgres -p #{NODES[instance]} pgltest"
-        not_if %q(psql -U postgres -tAc "select 1 from pg_database where datname='pgltest'"| grep 1)
+        not_if %Q(psql -U postgres -p #{NODES[instance]} -tAc "select 1 from pg_database where datname='pgltest'"| grep 1)
     end
 
 end
