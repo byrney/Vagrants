@@ -7,7 +7,7 @@ package 'ca-certificates'
 #
 apt_repository "postgresql" do
   uri "http://apt.postgresql.org/pub/repos/apt/"
-  distribution 'jessie-pgdg'
+  distribution "#{node['lsb']['codename']}-pgdg"
   components ["main"]
   key "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 end
