@@ -2,7 +2,7 @@
 Vagrant Boxes
 =============
 
-This is a collection of vagrant setups that I use. For debian 8 or windows on 
+This is a collection of vagrant setups that I use. For debian 8 or windows on
 some combination of VirtualBox, AWS and Azure.
 
 Previously these were in seperate repos with a lot of duplication in the
@@ -37,6 +37,19 @@ Azure boxes need
 * Download azure account settings
 * vagrant-azure plugin
 
+Guest Setup
+----------
+
+Most of the boxes use Berkshelf so the first step is to restore the various
+cookbooks. If there is no Berksfile then skip this step:
+
+    berks install
+
+And then it should just be a case of starting the VM
+
+    vagrant up
+
+
 Boxes
 ----
 
@@ -57,7 +70,8 @@ yosemite     -- OSX build with automated tools and users on virtualbox
 oracle-xe    -- An oracle XE install on debian
 postgres-xl  -- Two postgres XL nodes on a debian VM
 docker       -- Vanilla docker setup on debian
-pglogical    -- postgres and pg_logical  (In progress)
+pglogical    -- postgres and pg_logical 1 debian vm, 2 pg node setup
+centos       -- postgres and pg_logical 1 centos vm, 2 pg node setup
 citus        -- citus db multi-host setup
 ```
 

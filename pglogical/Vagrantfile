@@ -6,15 +6,15 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     #
+    # Host
+    #
+    host_user = ENV['USER'] || ENV['USERNAME']
+    #
     # Box
     #
     config.vm.box = "ARTACK/debian-jessie"
     config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
     config.vm.box_check_update = false
-
-    config.ssh.forward_x11 = true
-    config.ssh.insert_key = false
-    config.vm.hostname = Dir.pwd.split('/').last
 
     #
     # Provider
@@ -25,6 +25,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.name = Dir.pwd.split('/').last
         vb.linked_clone = true
     end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = Dir.pwd.split('/').last
+    config.ssh.forward_x11 = true
+    config.ssh.insert_key = false
+    config.vm.network "forwarded_port", guest: 5442, host: 15442, host_ip: "127.0.0.1", id: 'pg_lead'
+    config.vm.network "forwarded_port", guest: 5443, host: 15443, host_ip: "127.0.0.1", id: 'pg_follow'
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
 
     #
     # provision

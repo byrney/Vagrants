@@ -1,10 +1,10 @@
 create extension if not exists pglogical;
 
-select pglogical.drop_node('master', false);
+select pglogical.drop_node('lead', false);
 
 SELECT pglogical.create_node(
-    node_name := 'master',
-    dsn       := 'host=localhost port=5432 dbname=vagrant'
+    node_name := 'lead',
+    dsn       := 'host=localhost port=5442 dbname=vagrant'
 );
 
 \include_relative schema.sql

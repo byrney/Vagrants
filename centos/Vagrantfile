@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Box
+    #
+    config.vm.box = "centos7"
+    #config.vm.box_url = 'https://github.com/CommanderK5/packer-centos-template/releases/download/0.7.1/vagrant-centos-7.1.box'
+    config.vm.box_url = 'https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box'
+    config.vm.box_check_update = false
+
+    config.ssh.forward_x11 = true
+    config.ssh.insert_key = false
+    config.vm.hostname = Dir.pwd.split('/').last
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+        vb.gui = true
+        vb.memory = 2048
+        vb.name = Dir.pwd.split('/').last
+        vb.linked_clone = true
+    end
+
+    #
+    # provision
+    #
+    # config.vm.provision "fix-no-tty", type: "shell" do |s|
+    #     s.privileged = false
+    #     s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    # end
+
+    config.vm.provision "chef_solo" do |chef|
+        #chef.add_recipe 'debian-base-box::init'
+        chef.add_recipe 'debian-base-box::apps'
+        chef.add_recipe 'debian-dev-box::pg_logical'
+    end
+
+    #config.vm.provision(:shell, path: '../provision/mono.sh')
+    #config.vm.provision("powa", type: :shell, path: '../provision/powa.sh')
+
+    # config.vm.provision("autoremove", type: :shell, inline: 'apt-get -y autoremove')
+
+
+end

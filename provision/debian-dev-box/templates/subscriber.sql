@@ -1,11 +1,11 @@
 
 create extension if not exists pglogical;
 
-select pglogical.drop_node('subscriber', false);
+select pglogical.drop_node('follow', false);
 
 SELECT pglogical.create_node(
-    node_name := 'subscriber',
-    dsn := 'host=localhost port=5433 dbname=vagrant'
+    node_name := 'follow',
+    dsn := 'host=localhost port=5443 dbname=vagrant'
 );
 
 -- no schema!!
@@ -13,7 +13,7 @@ SELECT pglogical.create_node(
 
 select pglogical.create_subscription(
     subscription_name := 'subscription1',
-    provider_dsn := 'host=localhost port=5432 dbname=vagrant'
+    provider_dsn := 'host=localhost port=5442 dbname=vagrant'
 );
 
 
