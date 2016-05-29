@@ -1,0 +1,27 @@
+[renderd]
+stats_file=/var/run/renderd/renderd.stats
+socketname=/var/run/renderd/renderd.sock
+num_threads=4
+tile_dir=/var/lib/mod_tile
+
+[mapnik]
+plugins_dir=/usr/lib/mapnik/2.2/input
+font_dir=/usr/share/fonts/truetype/
+font_dir_recurse=true
+
+[default]
+XML=<%=@xml%>
+#HTCPHOST=proxy.openstreetmap.org
+#TILESIZE=512
+#** config options used by mod_tile only, but not renderd **
+URI=/osm/
+DESCRIPTION=This is the standard osm mapnik style
+#ATTRIBUTION=&copy;<a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> and <a href=\"http://wiki.openstreetmap.org/w\
+iki/Contributors\">contributors</a>, <a href=\"http://opendatacommons.org/licenses/odbl/\">OdBL</a>
+HOST=<%=@host%>
+#SERVER_ALIAS=http://a.tile.openstreetmap.org
+#SERVER_ALIAS=http://b.tile.openstreetmap.org
+#MINZOOM=0 
+#MAXZOOM=18
+
+

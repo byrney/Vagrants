@@ -73,6 +73,7 @@ docker       -- Vanilla docker setup on debian
 pglogical    -- postgres and pg_logical 1 debian vm, 2 pg node setup
 centos       -- postgres and pg_logical 1 centos vm, 2 pg node setup
 citus        -- citus db multi-host setup
+osm          -- open street map tile server with postgis
 ```
 
 
