@@ -4,6 +4,7 @@ when 'debian'
     package 'apt-transport-https'
     package 'ca-certificates'
 
+    node['lsb']['codename'] || raise("No codename. install lsb-release?")
     #
     # Postgres install
     #

@@ -1,5 +1,5 @@
 
-DEV_PACKAGES  = %w(git-sh git-svn ruby-build ruby-full bundler node npm)
+DEV_PACKAGES  = %w(git-sh git-svn ruby-build ruby-full bundler nodejs npm)
 DEV_PACKAGES.each  {|p| package p }
 
 link '/usr/bin/node' do

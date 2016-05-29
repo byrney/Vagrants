@@ -23,13 +23,13 @@ when 'debian'
 
 when 'rhel'
 
-    remote_file '/home/vagrant/pglogical-rhel-1.1-1.noarch.rpm' do
-        source 'http://packages.2ndquadrant.com/pglogical/yum-repo-rpms/pglogical-rhel-1.0-1.noarch.rpm'
+    remote_file '/home/vagrant/pglogical-rhel-1.0-2.noarch.rpm' do
+        source 'http://packages.2ndquadrant.com/pglogical/yum-repo-rpms/pglogical-rhel-1.0-2.noarch.rpm'
         owner 'vagrant'
     end
 
     rpm_package '2ndQ-repo-rpm' do
-        source '/home/vagrant/pglogical-rhel-1.1-1.noarch.rpm'
+        source '/home/vagrant/pglogical-rhel-1.0-2.noarch.rpm'
         action :install
     end
     package 'postgresql95-pglogical'
@@ -54,6 +54,7 @@ NODES.each_pair do |instance, port|
         conf_dir = "/var/lib/pgsql/9.5/#{instance}"
         data_dir = "/var/lib/pgsql/9.5/#{instance}"
         log_dir = "/var/log/postgresql"
+        run_dir = "/var/run/postgresql/#{instance}"
         bin_dir = "/usr/pgsql-9.5/bin"
     end
 
