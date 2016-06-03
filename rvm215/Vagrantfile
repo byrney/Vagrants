@@ -58,8 +58,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 environment({'HOME' => '/home/vagrant', 'USER' => 'vagrant'})
             end
 
-            execute 'rvm-215' do
-                command 'source .rvm/scripts/rvm && rvm install 2.1.5'
+            script 'rvm-215' do
+                interpreter 'bash'
+                code '. .rvm/scripts/rvm && rvm install 2.1.5'
                 user 'vagrant'
                 cwd '/home/vagrant'
                 environment({'HOME' => '/home/vagrant', 'USER' => 'vagrant'})
