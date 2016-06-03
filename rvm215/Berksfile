@@ -1,5 +1,0 @@
-source "https://supermarket.chef.io"
-
-#metadata
-
-cookbook 'debian-dev-box', path: '../provision/debian-dev-box/'
