@@ -40,7 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision "chef_apply" do |chef|
         chef.recipe = <<-END
-            package ['curl', 'git', 'ruby-build', 'npm', 'bundler', 'mongodb']
+            package ['curl', 'git', 'ruby-build', 'nodejs', 'npm', 'bundler', 'mongodb']
 
             execute 'gpg' do
                 command 'gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'
@@ -56,6 +56,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 user 'vagrant'
                 cwd '/home/vagrant'
                 environment({'HOME' => '/home/vagrant', 'USER' => 'vagrant'})
+            end
+
+            link '/usr/bin/node' do
+                to '/usr/bin/nodejs'
+            end
+
+            execute 'phantom-setup' do
+                command 'npm install -g phantomjs'
+                creates '/usr/local/bin/phantomjs'
             end
 
             script 'rvm-215' do
