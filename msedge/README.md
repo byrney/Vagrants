@@ -50,8 +50,8 @@ the box format is itself compressed...
 Clone this repo
 
 ```bash
-git clone https://github.com/byrney/modern
-cd modern
+git clone https://github.com/byrney/vagrants
+cd vagrants/msedge
 ```
 
 Get the box  (this may take a while)
