@@ -16,6 +16,7 @@ apt_repository "cran" do
     components ["main"]
     keyserver 'keys.gnupg.net'
     key "381BA480"
+    #key "cran-pgp.asc"
 end
 
 #
@@ -36,7 +37,7 @@ remote_file '/home/vagrant/rstudio.deb' do
     owner 'vagrant'
     group 'vagrant'
     action :create
-    checksum '98ea59d3db00e0083d3e4053514f764d'
+    #checksum '98ea59d3db00e0083d3e4053514f764d'
 end
 
 dpkg_package 'rstudio.deb' do
