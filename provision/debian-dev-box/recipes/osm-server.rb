@@ -138,6 +138,12 @@ execute "extensions" do
     user 'postgres'
 end
 
+file '/home/vagrant/up.sh' do
+    content <<-EOS
+        sudo -u postgres #{bin_dir}/pg_ctl -w -l '#{log_dir}/#{instance}.log' -D #{data_dir} start &&
+        renderd -f
+    EOS
+end
 #
 # create styles
 #
@@ -169,10 +175,9 @@ end
 #
 # import map data
 #
-
 remote_file '/home/vagrant/osm/devon-latest.osm.pbf' do
     source 'http://download.geofabrik.de/europe/great-britain/england/devon-latest.osm.pbf'
-    action :create
+    action :create_if_missing
     owner 'vagrant'
 end
 
