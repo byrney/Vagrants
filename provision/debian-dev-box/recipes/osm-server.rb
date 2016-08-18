@@ -15,6 +15,7 @@ apt_repository "openstreetmap" do
     trusted true
 end
 
+
 package %W(postgresql-9.5-postgis-2.2 libgeos-dev proj-bin osm2pgsql osmctools)
 
 #
@@ -41,6 +42,13 @@ when 'rhel'
     log_dir = "/var/log/postgresql"
     run_dir = "/var/run/postgresql/#{instance}"
     bin_dir = "/usr/pgsql-9.5/bin"
+end
+
+apt_repository "pgrouting" do
+    uri "http://ppa.launchpad.net/georepublic/pgrouting-unstable/ubuntu"
+    distribution "trusty"
+    components ["main"]
+    trusted true
 end
 
 #

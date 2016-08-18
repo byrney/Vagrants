@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.hostname = Dir.pwd.split('/').last
     config.ssh.forward_x11 = true
     config.ssh.insert_key = false
-    config.vm.network "forwarded_port", guest: 80, host: 4000, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 80, host: 4321, host_ip: "127.0.0.1"
 
     #
     # Provision
