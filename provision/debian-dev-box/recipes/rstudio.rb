@@ -11,11 +11,11 @@ package 'ca-certificates'
 # Add cran repo
 #
 apt_repository "cran" do
-    uri "http://cran.uk.r-project.org/bin/linux/debian"
+    uri "http://mirrors.ebi.ac.uk/CRAN/bin/linux/debian"
     distribution "#{node['lsb']['codename']}-cran3"
-    components ["main"]
     keyserver 'keys.gnupg.net'
     key "381BA480"
+    component ['main']
     #key "cran-pgp.asc"
 end
 
@@ -43,4 +43,9 @@ end
 dpkg_package 'rstudio.deb' do
     source "/home/vagrant/rstudio.deb"
 end
+
+#
+# Other usefuls
+#
+package ['unixodbc', 'libgdal-dev']
 

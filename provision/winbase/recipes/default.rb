@@ -37,7 +37,8 @@ end
 # vim 7.4.1525
 # VisualStudio2015Community 14.0.24720.01
 
-%w{ toolsroot 7zip vim cmdermini.portable }.each do |pack|
+## remove vim and cmdermini as blocked by AV
+%w{ toolsroot 7zip }.each do |pack|
       chocolatey pack
 end
 
@@ -62,7 +63,7 @@ end
 # start-process -wait -verb runas -argumentlist "ruby -version 2.1.6" cinst
 chocolatey 'ruby' do
     action :install
-    version '2.1.6'
+    version '2.3'
 end
 
 # ruby2.devkit 4.7.2.2013022402
