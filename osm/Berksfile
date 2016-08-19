@@ -4,3 +4,5 @@ source "https://supermarket.chef.io"
 
 cookbook 'debian-dev-box', path: '../provision/debian-dev-box/'
 cookbook 'debian-base-box', path: '../provision/debian-base-box/'
+cookbook 'science', path: '../provision/science/'
+cookbook 'testing', path: '../provision/testing/'

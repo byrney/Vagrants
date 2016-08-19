@@ -45,9 +45,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "chef_solo" do |chef|
         chef.add_recipe 'debian-base-box::init'
         chef.add_recipe 'debian-dev-box::postgres'
-        chef.add_recipe 'debian-dev-box::osm-server'
-        chef.add_recipe 'debian-dev-box::transit-map'
-        chef.add_recipe 'debian-dev-box::qgis'
+        chef.add_recipe 'testing::osm-server'
+        chef.add_recipe 'testing::transit-map'
+        chef.add_recipe 'science::qgis'
         chef.channel = 'stable'
     end
 

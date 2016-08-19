@@ -69,7 +69,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             # Provision
             config.vm.provision "chef_solo" do |chef|
                 chef.add_recipe 'debian-base-box'
-                chef.add_recipe 'debian-dev-box::citus'
+                chef.add_recipe 'testing::citus'
                 chef.json = { :citus => {:instances =>  b.instances, :workers => WORKERS }}
             end
 

@@ -4,3 +4,4 @@ source "https://supermarket.chef.io"
 
 cookbook 'chocolatey', git: 'https://github.com/chocolatey/chocolatey-cookbook.git'
 cookbook 'winbase', path: '../provision/winbase'
+cookbook 'debian-dev-box', path: '../provision/debian-dev-box/'
