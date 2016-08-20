@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     config.vm.provision "chef_solo" do |chef|
-        chef.add_recipe 'debian-dev-box::postgres-xl'
+        chef.add_recipe 'testing::postgres-xl'
     end
 
     #config.vm.provision(:shell, path: '../provision/mono.sh')

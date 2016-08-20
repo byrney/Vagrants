@@ -2,5 +2,6 @@ source "https://supermarket.chef.io"
 
 #metadata
 
+cookbook 'testing', path: '../provision/testing/'
 cookbook 'debian-dev-box', path: '../provision/debian-dev-box/'
 cookbook 'debian-base-box', path: '../provision/debian-base-box/'

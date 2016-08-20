@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "chef_solo" do |chef|
         #chef.add_recipe 'debian-base-box::init'
         chef.add_recipe 'debian-base-box::apps'
-        chef.add_recipe 'debian-dev-box::pg_logical'
+        chef.add_recipe 'testing::pg_logical'
     end
 
     #config.vm.provision(:shell, path: '../provision/mono.sh')
