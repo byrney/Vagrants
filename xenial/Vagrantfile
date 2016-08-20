@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     # Box
     #
-    config.vm.box = "gbarbieru/xenial"
+    config.vm.box = "boxcutter/xenial"
     config.vm.box_check_update = false
 
     #
