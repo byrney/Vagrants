@@ -5,7 +5,7 @@ package 'ca-certificates'
 #
 # Postgres 9.5 install from PDG
 #
-include_recipe "#{cookbook_name}::postgres"
+include_recipe "debian-dev-box::postgres"
 
 #
 # pglogical extension from 2nd quadrant
