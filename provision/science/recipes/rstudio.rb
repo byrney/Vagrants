@@ -4,30 +4,18 @@
 #
 # https://cran.rstudio.com/bin/linux/debian/
 
+node.default['r']['cran_mirror'] = 'https://www.stats.bris.ac.uk/R/'
 package 'apt-transport-https' if node['platform_family'] == 'debian'
 package 'ca-certificates'
+package 'build-essential'
+include_recipe "debian-base-box::xorg"
+include_recipe "r::repo"
+include_recipe "r::default"
 
-#
-# Add cran repo
-#
-apt_repository "cran" do
-    uri "http://mirrors.ebi.ac.uk/CRAN/bin/linux/debian"
-    distribution "#{node['lsb']['codename']}-cran3"
-    keyserver 'keys.gnupg.net'
-    key "381BA480"
-    component ['main']
-    #key "cran-pgp.asc"
-end
-
-#
-# Install R
-#
-package ['r-base', 'r-base-dev']
-
-#
-# rstudio debpendencies
-#  -- these are old versions and do not get installed automatically
-package ['liborc-0.4-0', 'libgstreamer0.10-0', 'libgstreamer-plugins-base0.10-0', 'libxslt1.1']
+# #
+# # rstudio debpendencies
+# #  -- these are old versions and do not get installed automatically
+package ['liborc-0.4-0', 'libgstreamer0.10-0', 'libgstreamer-plugins-base0.10-0', 'libxslt1.1', 'libjpeg62']
 
 #
 # rstudio install
