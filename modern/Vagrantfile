@@ -23,6 +23,7 @@ Vagrant.configure(2) do |config|
         #chef.cookbooks_path = File.expand_path('../chef/chef-repo/cookbooks')
         chef.add_recipe 'winbase::init'
         chef.add_recipe 'winbase::rstudio'
+        chef.add_recipe 'winbase::qgis'
         chef.json = { :users => { :username => 'vagrant' } }
     end
 
