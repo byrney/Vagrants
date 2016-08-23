@@ -25,4 +25,4 @@ windows_package 'RStudio' do
     options '/S'
 end
 
-
+# https://github.com/git-for-windows/git/releases/download/v2.9.3.windows.1/Git-2.9.3-64-bit.exe
