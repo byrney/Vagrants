@@ -11,3 +11,7 @@ windows_zipfile 'HeidiSQL' do
     not_if {::File.exists?('c:/Program Files/HeidiSQL') }
     path 'c:/Program Files/HeidiSQL'
 end
+
+# ::Chef::Recipe.send(:include, Windows::Helper)
+# hash_of_installed_packages = installed_packages
+# puts hash_of_installed_packages.inspect

@@ -25,4 +25,10 @@ windows_package 'RStudio' do
     options '/S'
 end
 
+#C:\Program Files\RStudio\bin
+windows_shortcut 'c:/Users/Public/Desktop/RStudio.lnk' do
+  vb = 'C:/Program Files/RStudio/bin/rstudio.exe'
+  target vb
+  description "RStudio"
+end
 # https://github.com/git-for-windows/git/releases/download/v2.9.3.windows.1/Git-2.9.3-64-bit.exe
