@@ -38,6 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "chef_solo" do |chef|
         chef.version = '12.7'   # latest fails.  version needs vagrant 1.8.1 min
         chef.add_recipe 'winbase::init'
+        chef.add_recipe 'winbase::git-windows'
         chef.add_recipe 'winbase::python'
         chef.add_recipe 'winbase::rstudio'
         chef.add_recipe 'winbase::qgis'

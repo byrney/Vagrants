@@ -1,45 +1,11 @@
 DEPENDENCIES
-  chocolatey
-    git: https://github.com/chocolatey/chocolatey-cookbook.git
-    revision: c691805b893ca3cc51b12fe6888dc8064456d59c
-  debian-dev-box
-    path: ../provision/debian-dev-box
   winbase
     path: ../provision/winbase
 
 GRAPH
-  apt (4.0.2)
-    compat_resource (>= 12.10)
-  ark (1.2.0)
-    build-essential (>= 0.0.0)
-    seven_zip (>= 0.0.0)
-    windows (>= 0.0.0)
-  build-essential (6.0.3)
-    compat_resource (>= 12.10)
-    mingw (>= 1.1)
-    seven_zip (>= 0.0.0)
   chef_handler (1.3.0)
-  chocolatey (1.0.0)
+  chocolatey (1.0.1)
     windows (~> 1.38)
-  compat_resource (12.10.7)
-  debian-dev-box (0.1.0)
-    apt (>= 0.0.0)
-    ark (>= 0.0.0)
-    poise-python (>= 0.0.0)
-  mingw (1.2.4)
-    compat_resource (>= 0.0.0)
-    seven_zip (>= 0.0.0)
-  poise (2.7.1)
-  poise-archive (1.3.0)
-    poise (~> 2.6)
-  poise-languages (1.4.0)
-    poise (~> 2.5)
-    poise-archive (~> 1.0)
-  poise-python (1.4.0)
-    poise (~> 2.7)
-    poise-languages (~> 1.3)
-  seven_zip (2.0.1)
-    windows (>= 1.2.2)
   winbase (0.1.0)
     chocolatey (>= 0.5.2)
     windows (>= 0.0.0)

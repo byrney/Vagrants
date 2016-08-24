@@ -1,5 +1,5 @@
 
-CONDAPATH='c:/pkgs'  # cant seem to change this for installer
+CONDAPATH='c:\tools\anaconda'  # cant seem to change this for installer
 
 case node['kernel']['os_info']['os_architecture']
 when '32-bit'
@@ -14,6 +14,10 @@ when '64-bit'
         installer_type :custom
         options "/S /InstallationType=AllUsers /D=#{CONDAPATH}"
     end
+end
+
+windows_path "#{CONDAPATH}\\Scripts" do
+    action :add
 end
 
 execute 'install-jupyter' do
