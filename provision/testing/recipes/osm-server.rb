@@ -16,7 +16,7 @@ apt_repository "openstreetmap" do
 end
 
 
-package %W(postgresql-9.5-postgis-2.2 libgeos-dev proj-bin osm2pgsql osmctools)
+package %W(postgresql-9.5-postgis-2.2 libgeos-dev proj-bin osm2pgsql osmctools postgresql-9.5-pgrouting-doc postgresql-9.5-pgrouting )
 
 #
 # renderd
@@ -42,13 +42,6 @@ when 'rhel'
     log_dir = "/var/log/postgresql"
     run_dir = "/var/run/postgresql/#{instance}"
     bin_dir = "/usr/pgsql-9.5/bin"
-end
-
-apt_repository "pgrouting" do
-    uri "http://ppa.launchpad.net/georepublic/pgrouting-unstable/ubuntu"
-    distribution "trusty"
-    components ["main"]
-    trusted true
 end
 
 #
@@ -141,7 +134,7 @@ execute "create-db" do
 end
 
 execute "extensions" do
-    command 'psql -d gis -p 5452 -c "create extension hstore; create extension postgis;"'
+    command 'psql -d gis -p 5452 -c "create extension hstore; create extension postgis;create extension pgrouting"'
     action :nothing
     user 'postgres'
 end
@@ -185,6 +178,15 @@ end
 #
 remote_file '/home/vagrant/osm/devon-latest.osm.pbf' do
     source 'http://download.geofabrik.de/europe/great-britain/england/devon-latest.osm.pbf'
+    action :create_if_missing
+    owner 'vagrant'
+end
+
+#
+# import xml map data for routing
+#
+remote_file '/home/vagrant/osm/devon-latest.osm.bz2' do
+    source 'http://download.geofabrik.de/europe/great-britain/england/devon-latest.osm.bz2'
     action :create_if_missing
     owner 'vagrant'
 end

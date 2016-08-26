@@ -6,11 +6,11 @@ when '32-bit'
     windows_package 'Python 3.5.2 (Miniconda3 4.1.11 32-bit)' do
         source 'https://repo.continuum.io/miniconda/Miniconda3-4.1.11-Windows-x86.exe'
         installer_type :custom
-        options "/S /InstallationType=AllUsers /D=#{CONDAPATH}"
+        options "/S /D=#{CONDAPATH}"
     end
 when '64-bit'
     windows_package 'Python 3.5.2 (Miniconda3 4.1.11 64-bit)' do
-        source 'https://repo.continuum.io/miniconda/Miniconda3-4.1.11-Windows-x64.exe'
+        source 'https://repo.continuum.io/miniconda/Miniconda3-4.1.11-Windows-x86_64.exe'
         installer_type :custom
         options "/S /InstallationType=AllUsers /D=#{CONDAPATH}"
     end

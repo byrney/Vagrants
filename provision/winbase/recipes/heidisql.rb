@@ -8,7 +8,7 @@
 windows_zipfile 'HeidiSQL' do
     source 'http://www.heidisql.com/downloads/releases/HeidiSQL_9.3_Portable.zip'
     action :unzip
-    not_if {::File.exists?('c:/Program Files/HeidiSQL') }
+    not_if {::File.exists?('c:/Tools/HeidiSQL') }
     path 'c:/Tools/HeidiSQL'
 end
 

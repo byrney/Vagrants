@@ -26,17 +26,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.gui = true
         v.customize ["modifyvm", :id, "--memory", "2048"]
         v.customize ["modifyvm", :id, "--vram", "256"]
+        v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     end
     #
     # network
     #
+    config.vm.network "private_network", type: 'dhcp'
     config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 5985, host: 5985, id: "winrm", auto_correct: true
     config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 3389, host: 3389, id: "rdp", auto_correct: true
     #
     # Provision
     #
     config.vm.provision "chef_solo" do |chef|
-        chef.version = '12.7'   # latest fails.  version needs vagrant 1.8.1 min
         chef.add_recipe 'winbase::init'
         chef.add_recipe 'winbase::git-windows'
         chef.add_recipe 'winbase::python'

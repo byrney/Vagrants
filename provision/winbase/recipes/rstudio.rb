@@ -8,6 +8,13 @@ windows_package 'R for Windows 3.3.1' do
 end
 
 windows_path "#{RDIR}\\R-3.3.1\\bin\\i386" do
+    arch = case node['kernel']['os_info']['os_architecture']
+           when '32-bit'
+               'i386'
+           when '64-bit'
+                'x64'
+           end
+    path "#{RDIR}\\R-3.3.1\\bin\\#{arch}"
     action :add
 end
 

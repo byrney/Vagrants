@@ -30,9 +30,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Networking
     #
     config.vm.hostname = Dir.pwd.split('/').last
+    config.vm.network "private_network", type: 'dhcp'
     config.ssh.forward_x11 = true
     config.ssh.insert_key = false
     config.vm.network "forwarded_port", guest: 80, host: 4321, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 5452, host: 55452, host_ip: "127.0.0.1", id: 'postgis'
 
     #
     # Provision
@@ -47,7 +49,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         chef.add_recipe 'debian-dev-box::postgres'
         chef.add_recipe 'testing::osm-server'
         chef.add_recipe 'testing::transit-map'
-        chef.add_recipe 'science::qgis'
         chef.channel = 'stable'
     end
 
