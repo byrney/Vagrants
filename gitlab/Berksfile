@@ -2,6 +2,5 @@ source "https://supermarket.chef.io"
 
 #metadata
 
-cookbook 'debian-dev-box', path: '../provision/debian-dev-box/'
 cookbook 'debian-base-box', path: '../provision/debian-base-box/'
-cookbook 'poise-python', '~> 1.4.0'
+cookbook 'omnibus-gitlab', git: 'https://gitlab.com/byrney/cookbook-omnibus-gitlab'

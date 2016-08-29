@@ -1,0 +1,12 @@
+DEPENDENCIES
+  debian-base-box
+    path: ../provision/debian-base-box
+  omnibus-gitlab
+    git: https://gitlab.com/byrney/cookbook-omnibus-gitlab
+    revision: 435dbcba77712b9b3f9b2a97ca52bc36c3c16926
+
+GRAPH
+  debian-base-box (0.1.0)
+  gitlab-attributes-with-secrets (0.1.0)
+  omnibus-gitlab (0.3.3)
+    gitlab-attributes-with-secrets (>= 0.0.0)

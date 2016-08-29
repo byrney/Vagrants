@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.ssh.forward_x11 = true
     config.ssh.forward_agent = true
     config.ssh.insert_key = false
-    config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1", guest_ip: "0.0.0.0", id: 'jupyter'
+    #config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1", guest_ip: "0.0.0.0", id: 'jupyter'
     #onfig.vm.network "forwarded_port", guest: 9042, host: 9042, host_ip: "127.0.0.1", id: 'port9042'
 
     config.vm.synced_folder("/Users/#{host_user}", '/Host')
@@ -55,12 +55,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "chef_solo" do |chef|
         chef.version = '12.10.24'
         chef.channel = 'stable'
-        chef.add_recipe 'debian-base-box::default'
-        chef.add_recipe 'debian-dev-box::ipython'
-        #  passphrase on key stops this from working
-        #chef.add_recipe 'debian-base-box::users'
-        chef.add_recipe 'debian-base-box::xorg'
-        chef.json = { :users => { :username => host_user, :priv_key => priv_key, :pub_key => pub_key } }
+        chef.add_recipe 'debian-base-box::init'
+        chef.add_recipe 'omnibus-gitlab::default'
     end
 
 end
