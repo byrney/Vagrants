@@ -1,0 +1,55 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Host
+    #
+    host_user = ENV['USER'] || ENV['USERNAME']
+    #
+    # Box
+    #
+    config.vm.box = "ARTACK/debian-jessie"
+    config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
+    config.vm.box_check_update = false
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+       vb.gui = true
+       vb.memory = 2048
+       vb.name = Dir.pwd.split('/').last
+       vb.linked_clone = true
+    end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = Dir.pwd.split('/').last
+    config.vm.network "private_network", type: 'dhcp'
+    config.ssh.forward_x11 = true
+    config.ssh.insert_key = false
+    config.vm.network "forwarded_port", guest: 5452, host: 55452, host_ip: "127.0.0.1", id: 'postgis'
+
+    #
+    # Provision
+    #
+    config.vm.provision "fix-no-tty", type: "shell" do |s|
+        s.privileged = false
+        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+
+    config.vm.provision "chef_solo" do |chef|
+        chef.add_recipe 'debian-base-box::init'
+        chef.add_recipe 'debian-dev-box::postgis'
+        chef.channel = 'stable'
+        chef.json = { :postgis => { 'instance' => 'gis', 'port' => 5452 } }
+    end
+
+    config.vm.provision("autoremove", type: :shell, inline: 'apt-get -y autoremove')
+
+end

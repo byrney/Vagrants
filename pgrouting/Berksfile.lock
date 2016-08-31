@@ -3,8 +3,6 @@ DEPENDENCIES
     path: ../provision/debian-base-box
   debian-dev-box
     path: ../provision/debian-dev-box
-  testing
-    path: ../provision/testing
 
 GRAPH
   apt (3.0.0)
@@ -21,9 +19,5 @@ GRAPH
     ark (>= 0.0.0)
   seven_zip (2.0.0)
     windows (>= 1.2.2)
-  testing (0.1.0)
-    apt (>= 0.0.0)
-    ark (>= 0.0.0)
-    debian-dev-box (>= 0.0.0)
   windows (1.39.2)
     chef_handler (>= 0.0.0)
