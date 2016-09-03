@@ -1,5 +1,6 @@
 
 RDIR='c:\Tools\R'
+TEMPDIR=ENV['TEMP']
 
 windows_package 'R for Windows 3.3.1' do
     source 'https://cran.r-project.org/bin/windows/base/R-3.3.1-win.exe'
@@ -39,4 +40,28 @@ windows_shortcut 'c:/Users/Public/Desktop/RStudio.lnk' do
   target vb
   description "RStudio"
 end
-# https://github.com/git-for-windows/git/releases/download/v2.9.3.windows.1/Git-2.9.3-64-bit.exe
+
+#
+# postgres ODBC drivers for use in R
+#
+windows_zipfile TEMPDIR do
+    arch = case node['kernel']['os_info']['os_architecture']
+           when '32-bit'
+               'x86'
+           when '64-bit'
+                'x64'
+           end
+    source "https://ftp.postgresql.org/pub/odbc/versions/msi/psqlodbc_09_05_0400-#{arch}.zip"
+    action :unzip
+end
+
+windows_package 'psqlODBC' do
+    arch = case node['kernel']['os_info']['os_architecture']
+           when '32-bit'
+               'x86'
+           when '64-bit'
+                'x64'
+           end
+    source "#{TEMPDIR}/psqlodbc-#{arch}.msi"
+end
+
