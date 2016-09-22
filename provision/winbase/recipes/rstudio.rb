@@ -25,7 +25,7 @@ windows_package 'Rtools 3.3' do
     options "/SILENT /DIR=#{RDIR}\\Rtools"
 end
 
-windows_path "#{RDIR}\\tools\\bin" do
+windows_path "#{RDIR}\\Rtools\\bin" do
     action :add
 end
 

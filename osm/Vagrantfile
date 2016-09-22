@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Provider
     #
     config.vm.provider "virtualbox" do |vb|
-       vb.gui = true
+       vb.gui = false
        vb.memory = 2048
        vb.name = Dir.pwd.split('/').last
        vb.linked_clone = true
@@ -36,6 +36,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.network "forwarded_port", guest: 80, host: 4321, host_ip: "127.0.0.1"
     config.vm.network "forwarded_port", guest: 5452, host: 55452, host_ip: "127.0.0.1", id: 'postgis'
 
+    #
+    # Shared folders
+    #
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
     #
     # Provision
     #

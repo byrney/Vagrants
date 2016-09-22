@@ -7,12 +7,12 @@ node['lsb']['codename'] || raise("No codename. install lsb-release?")
 #
 # QGis repo
 #
-apt_repository "postgresql" do
+apt_repository "qgis" do
     uri "http://qgis.org/debian"
     distribution "#{node['lsb']['codename']}"
     components ["main"]
     keyserver 'keyserver.ubuntu.com'
-    key "http://qgis.org/downloads/qgis-2015.gpg.key"
+    key "073D307A618E5811"
 end
 
 
