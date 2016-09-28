@@ -1,0 +1,22 @@
+<VirtualHost 127.0.0.1:8080>
+    ServerName <%= @server_name %>
+    ServerAlias <%= @server_alias %>
+    WSGIScriptAlias / <%= @config_dir %>/apache.wsgi
+
+    # Pass authorization info on (needed for rest api).
+    WSGIPassAuthorization On
+
+    # Deploy as a daemon (avoids conflicts between CKAN instances).
+    WSGIDaemonProcess ckan_<%= @project_name %> display-name=ckan_<%= @project_name %> processes=2 threads=15
+
+    WSGIProcessGroup ckan_<%= @project_name %>
+
+    ErrorLog /var/log/apache2/ckan_<%= @project_name %>.error.log
+    CustomLog /var/log/apache2/ckan_<%= @project_name %>.custom.log combined
+
+    <IfModule mod_rpaf.c>
+        RPAFenable On
+        RPAFsethostname On
+        RPAFproxy_ips 127.0.0.1
+    </IfModule>
+</VirtualHost>

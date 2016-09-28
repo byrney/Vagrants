@@ -1,0 +1,29 @@
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+pkg/
+
+# Berkshelf
+.vagrant
+/cookbooks
+Berksfile.lock
+
+# Bundler
+Gemfile.lock
+bin/*
+.bundle/*
+
+.kitchen/
+.kitchen.local.yml
+
+.DS_Store
+
+# Ignore everything in these directories
+synced_folders/*
+synced_folders/*
+synced_folders/*
+# Except this .gitkeep file
+!synced_folders/.gitkeep
