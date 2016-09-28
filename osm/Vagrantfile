@@ -53,6 +53,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         chef.add_recipe 'debian-dev-box::postgres'
         chef.add_recipe 'testing::osm-server'
         chef.add_recipe 'testing::transit-map'
+        chef.add_recipe 'testing::gdal-bin'
+        chef.add_recipe 'science::qgis'
         chef.channel = 'stable'
     end
 

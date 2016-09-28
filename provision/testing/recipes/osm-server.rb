@@ -21,7 +21,9 @@ package %W(libgeos-dev proj-bin osm2pgsql osmctools )
 #
 # renderd
 #
-package %W(renderd gdal-bin mapnik-utils node-carto apache2 libapache2-mod-tile)
+include_recipe 'testing::gdal-bin'
+
+package %W(renderd mapnik-utils node-carto apache2 libapache2-mod-tile)
 
 #
 # postgres instance with postgis

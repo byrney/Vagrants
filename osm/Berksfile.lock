@@ -3,6 +3,11 @@ DEPENDENCIES
     path: ../provision/debian-base-box
   debian-dev-box
     path: ../provision/debian-dev-box
+  r
+    git: https://github.com/stevendanna/cookbook-r
+    revision: 23ec9d140a255e88fddb8aa7ba53a54d43f2be7a
+  science
+    path: ../provision/science
   testing
     path: ../provision/testing
 
