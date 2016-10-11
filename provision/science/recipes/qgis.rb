@@ -16,5 +16,5 @@ apt_repository "qgis" do
 end
 
 
-package 'qgis'
+package %W( xorg qgis )
 
