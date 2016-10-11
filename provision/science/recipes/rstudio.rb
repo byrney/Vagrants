@@ -9,8 +9,17 @@ package 'apt-transport-https' if node['platform_family'] == 'debian'
 package 'ca-certificates'
 package 'build-essential'
 include_recipe "debian-base-box::xorg"
-include_recipe "r::repo"
-include_recipe "r::default"
+
+#
+# R base first
+#
+apt_repository 'cran' do
+    uri 'http://cran.rstudio.com/bin/linux/ubuntu'
+    key 'E084DAB9'
+    distribution "#{node['lsb']['codename']}/"   #  note '/' required at end
+end
+
+package %W(r-base r-base-dev)
 
 # #
 # # rstudio debpendencies
@@ -33,7 +42,7 @@ dpkg_package 'rstudio.deb' do
 end
 
 #
-# Other usefuls
+# Other usefuls required for gdal and database access
 #
-package ['unixodbc', 'libgdal-dev']
+package ['unixodbc', 'libgdal', 'libgdal-dev', 'libproj-dev', 'proj-bin', 'proj-data', 'libcurl4-openssl-dev']
 

@@ -26,7 +26,6 @@ GRAPH
   science (0.1.0)
     apt (>= 0.0.0)
     ark (>= 0.0.0)
-    r (>= 0.0.0)
   seven_zip (2.0.0)
     windows (>= 1.2.2)
   windows (1.39.2)
