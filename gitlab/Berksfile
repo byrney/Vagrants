@@ -3,4 +3,5 @@ source "https://supermarket.chef.io"
 #metadata
 
 cookbook 'debian-base-box', path: '../provision/debian-base-box/'
-cookbook 'omnibus-gitlab', git: 'https://gitlab.com/byrney/cookbook-omnibus-gitlab'
+cookbook 'debian-dev-box', path: '../provision/debian-dev-box/'
+cookbook 'testing', path: '../provision/testing'
