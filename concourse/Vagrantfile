@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     host_key_file = "/Users/#{host_user}/.ssh/id_rsa"
     if(File.exist?(host_key_file))
         priv_key = File.read(host_key_file) || nil
-        pub_key = File.read("#{host_key_file}.pub") || nil
+        pub_key  = File.read("#{host_key_file}.pub") || nil
     end
     #
     # Box
@@ -24,9 +24,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Provider
     #
     config.vm.provider "virtualbox" do |vb|
-       vb.gui = true
-       vb.memory = 2048
-       vb.name = Dir.pwd.split('/').last
+       vb.gui          = false
+       vb.memory       = 2048
+       vb.name         = Dir.pwd.split('/').last
        vb.linked_clone = true
        vb.customize ["modifyvm", :id, "--vram", "256"]
     end
@@ -35,10 +35,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Networking
     #
     config.vm.hostname = Dir.pwd.split('/').last
-    config.ssh.forward_x11 = true
+    config.ssh.forward_x11   = true
     config.ssh.forward_agent = true
-    config.ssh.insert_key = false
-#    config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1", guest_ip: "0.0.0.0", id: 'jupyter'
+    config.ssh.insert_key    = false
+    config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1", guest_ip: "0.0.0.0", id: 'concourse-atc'
+    config.vm.network "forwarded_port", guest: 2222, host: 4444, host_ip: "127.0.0.1", guest_ip: "0.0.0.0", id: 'concourse-tsa'
 
     config.vm.synced_folder("/Users/#{host_user}", '/Host')
 
@@ -47,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     config.vm.provision "fix-no-tty", type: "shell" do |s|
         s.privileged = false
-        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+        s.inline     = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
     end
 
     config.vm.provision "chef_solo" do |chef|
@@ -55,10 +56,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         chef.channel = 'stable'
         chef.add_recipe 'debian-base-box::init'
         chef.add_recipe 'testing::concourse'
-#        chef.add_recipe 'science::rstudio'
-        #  passphrase on key stops this from working
-        #chef.add_recipe 'debian-base-box::users'
-        #chef.add_recipe 'debian-base-box::xorg'
         chef.json = { :users => { :username => host_user, :priv_key => priv_key, :pub_key => pub_key } }
     end
 
