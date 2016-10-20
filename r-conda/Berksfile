@@ -1,0 +1,7 @@
+source "https://supermarket.chef.io"
+
+#metadata
+
+cookbook 'science', path: '../provision/science/'
+cookbook 'debian-base-box', path: '../provision/debian-base-box/'
+cookbook 'r', git: 'https://github.com/stevendanna/cookbook-r'
