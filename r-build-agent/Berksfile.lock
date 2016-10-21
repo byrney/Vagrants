@@ -1,9 +1,6 @@
 DEPENDENCIES
   debian-base-box
     path: ../provision/debian-base-box
-  r
-    git: https://github.com/stevendanna/cookbook-r
-    revision: 23ec9d140a255e88fddb8aa7ba53a54d43f2be7a
   science
     path: ../provision/science
 
@@ -17,12 +14,6 @@ GRAPH
     seven_zip (>= 0.0.0)
   chef_handler (1.3.0)
   debian-base-box (0.1.0)
-  r (0.3.0)
-    apt (>= 0.0.0)
-    ark (>= 0.0.0)
-    build-essential (>= 0.0.0)
-    readline (>= 0.0.0)
-  readline (0.0.5)
   science (0.1.0)
     apt (>= 0.0.0)
     ark (>= 0.0.0)

@@ -53,6 +53,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         chef.version = '12.10.24'
         chef.channel = 'stable'
         chef.add_recipe 'debian-base-box::init'
+        chef.add_recipe 'science::r-base'
         #  passphrase on key stops this from working
         #chef.add_recipe 'debian-base-box::users'
         #chef.add_recipe 'debian-base-box::xorg'

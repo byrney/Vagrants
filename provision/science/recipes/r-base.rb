@@ -24,5 +24,14 @@ package %W(r-base r-base-dev)
 #
 # Other usefuls required for gdal and database access
 #
-package ['unixodbc', 'libgdal', 'libgdal-dev', 'libproj-dev', 'proj-bin', 'proj-data', 'libcurl4-openssl-dev']
+package ['unixodbc', 'unixodbc-dev', 'libgdal-dev', 'libproj-dev', 'proj-bin', 'proj-data', 'libcurl4-openssl-dev']
+
+#
+# Ensure packrat is available in the base R install
+#
+execute 'install-packrat' do
+    command %Q[Rscript -e "install.packages('packrat', repos='https://www.stats.bris.ac.uk/R/')"]
+end
+
+#  NEED to export TAR=/bin/tar for R packages to build
 

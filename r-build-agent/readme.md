@@ -1,7 +1,7 @@
 
-install R
+install conda
 
-install rstudio
+install R from conda
 
 Setup packrat
 
