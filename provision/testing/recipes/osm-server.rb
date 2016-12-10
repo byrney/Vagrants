@@ -21,7 +21,17 @@ package %W(libgeos-dev proj-bin osm2pgsql osmctools )
 #
 # renderd
 #
-package %W(renderd gdal-bin mapnik-utils node-carto apache2 libapache2-mod-tile)
+package %W(renderd gdal-bin mapnik-utils apache2 libapache2-mod-tile)
+
+#
+# cartocss
+#
+package %W(nodejs npm)
+
+execute 'install carto' do
+    command "npm install -g carto"
+    creates '/usr/local/bin/carto'
+end
 
 #
 # postgres instance with postgis
@@ -89,13 +99,19 @@ execute 'adjust-mml-db' do
     user 'vagrant'
 end
 
-execute 'create-styles' do
-    command './get-shapefiles.sh && carto project-5452.mml > style.xml'
+execute 'get-shapefiles' do
+    command 'python ./scripts/get-shapefiles.py && touch data/styles-downloaded.log'
+    cwd '/home/vagrant/osm/openstreetmap-carto'
+    user 'vagrant'
+    creates 'data/world_boundaries'
+end
+
+execute 'create-style' do
+    command 'nodejs /usr/local/bin/carto project-5452.mml > style.xml'
     cwd '/home/vagrant/osm/openstreetmap-carto'
     user 'vagrant'
     creates 'style.xml'
 end
-
 #
 # import map data
 #
