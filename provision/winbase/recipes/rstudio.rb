@@ -53,6 +53,7 @@ windows_zipfile TEMPDIR do
            end
     source "https://ftp.postgresql.org/pub/odbc/versions/msi/psqlodbc_09_05_0400-#{arch}.zip"
     action :unzip
+    overwrite true
 end
 
 windows_package 'psqlODBC' do
@@ -62,6 +63,6 @@ windows_package 'psqlODBC' do
            when '64-bit'
                 'x64'
            end
-    source "#{TEMPDIR}/psqlodbc-#{arch}.msi"
+    source "#{TEMPDIR}/psqlodbc_09_05_0400-#{arch}.msi"
 end
 
