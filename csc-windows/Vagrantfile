@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # box
     #
 #    config.vm.box_url = "http://aka.ms/vagrant-win81-ie11"
-    config.vm.box = "csc-win8"
+    config.vm.box = "win81"
     config.vm.communicator = "winrm"
     config.winrm.retry_limit = 30
     config.winrm.retry_delay = 10

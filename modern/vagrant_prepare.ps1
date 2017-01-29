@@ -119,6 +119,7 @@ Call 'Step 7: Enable WinRM Control' {
         winrm set winrm/config '@{MaxTimeoutms="1800000"}' | out-null
         winrm set winrm/config/service '@{AllowUnencrypted="true"}' | out-null
         winrm set winrm/config/service/auth '@{Basic="true"}' | out-null
+        winrm set winrm/config/listener?Address=*+Transport=HTTP @{Port="5985"} | out-null
         # make winrm start auto  (no ps command for this)
         invoke-expression "sc.exe config winrm start=auto"
         Write-Host "WinRM has been configured and enabled." -ForegroundColor Green
@@ -159,28 +160,28 @@ Call 'Step 10: Disable some bothersome services' {
         invoke-expression "sc.exe config pcasvc start=disabled"
     }
 
-Call 'Step 10: install chef client' {
-    if(test-path "c:\opscode\chef\bin\chef-client") {
-        write-host "Chef already installed"
-        return
-    }
-    $chefUrl = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2008r2/i386/chef-client-12.5.1-1-x86.msi"
-    $tempDir = $env:Temp
-    $file = Join-Path $tempDir "chef-install.msi"
+# Call 'Step 10: install chef client' {
+#     if(test-path "c:\opscode\chef\bin\chef-client") {
+#         write-host "Chef already installed"
+#         return
+#     }
+#     $chefUrl = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2008r2/i386/chef-client-12.5.1-1-x86.msi"
+#     $tempDir = $env:Temp
+#     $file = Join-Path $tempDir "chef-install.msi"
 
-    # download the package
-    if(test-path $file){
-        write-host "msi already downloaded at $file"
-    } else {
-      write-host "Downloading chef MSI from $chefUrl"
-      $downloader = new-object System.Net.WebClient
-      $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
-      $downloader.DownloadFile($chefUrl, $file)
-    }
-    write-host "Installing chef msi $file"
-    & cmd /c msiexec /qn /i "$file"
-    Write-Host "Chef Client has been installed" -ForegroundColor Green
-}
+#     # download the package
+#     if(test-path $file){
+#         write-host "msi already downloaded at $file"
+#     } else {
+#       write-host "Downloading chef MSI from $chefUrl"
+#       $downloader = new-object System.Net.WebClient
+#       $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
+#       $downloader.DownloadFile($chefUrl, $file)
+#     }
+#     write-host "Installing chef msi $file"
+#     & cmd /c msiexec /qn /i "$file"
+#     Write-Host "Chef Client has been installed" -ForegroundColor Green
+# }
 
 Write-Host "Restarting Computer." -ForegroundColor Yellow
 
