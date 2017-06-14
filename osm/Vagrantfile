@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     config.vm.provider "virtualbox" do |vb|
        vb.gui = true
-       vb.memory = 2048
+       vb.memory = 8192
        vb.name = Dir.pwd.split('/').last
        vb.linked_clone = true
     end

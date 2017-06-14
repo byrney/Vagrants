@@ -15,6 +15,30 @@ apt_repository "openstreetmap" do
     trusted true
 end
 
+#
+# osm2pgrouting
+#
+
+package %W(cmake libexpat1 libexpat1-dev libboost-all-dev postgresql-server-dev-9.5)
+
+git 'osm2pgrouting-sync' do
+    repository 'https://github.com/pgRouting/osm2pgrouting.git'
+    destination "/home/vagrant/osm/osm2pgrouting"
+    user 'vagrant'
+    action :checkout
+end
+
+execute 'osm2pgr-build' do
+    command 'cmake -H. -Bbuild && cd build && make'
+    cwd '/home/vagrant/osm/osm2pgrouting'
+    creates "/home/vagrant/osm/osm2pgrouting/build/osm2pgrouting"
+end
+
+execute 'osm2pgr-install' do
+    command 'make install'
+    cwd '/home/vagrant/osm/osm2pgrouting/build'
+    creates "/usr/bin/osm2pgrouting"
+end
 
 package %W(libgeos-dev proj-bin osm2pgsql osmctools )
 
@@ -106,12 +130,6 @@ execute 'get-shapefiles' do
     creates 'data/world_boundaries'
 end
 
-execute 'create-style' do
-    command 'nodejs /usr/local/bin/carto project-5452.mml > style.xml'
-    cwd '/home/vagrant/osm/openstreetmap-carto'
-    user 'vagrant'
-    creates 'style.xml'
-end
 #
 # import map data
 #
@@ -138,9 +156,30 @@ execute 'load-devon' do
     user 'vagrant'
 end
 
+
+execute 'devon-unzip' do
+    command "bunzip2 /home/vagrant/osm/devon-latest.osm.bz2"
+    creates '/home/vagrant/osm/devon-latest.osm'
+    user 'vagrant'
+end
+
+execute 'osm2pgr-devon' do
+    command "osm2pgrouting --f /home/vagrant/osm/devon-latest.osm -d gis -p #{port} && touch /home/vagrant/osm/routing-devon.log"
+    creates '/home/vagrant/osm/routing-devon.log'
+    user 'vagrant'
+end
+
 #
 # renderd
 #
+
+execute 'create-style' do
+    command 'nodejs /usr/local/bin/carto project-5452.mml > style.xml'
+    cwd '/home/vagrant/osm/openstreetmap-carto'
+    user 'vagrant'
+    creates 'style.xml'
+end
+
 template '/etc/renderd.conf' do
     source 'renderd.conf.erb'
     mode '0755'

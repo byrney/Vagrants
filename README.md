@@ -73,7 +73,7 @@ docker       -- Vanilla docker setup on debian
 pglogical    -- postgres and pg_logical 1 debian vm, 2 pg node setup
 centos       -- postgres and pg_logical 1 centos vm, 2 pg node setup
 citus        -- citus db multi-host setup
-osm          -- open street map tile server with postgis
+osm          -- open street map tile server with postgis and pgrouting
 ```
 
 
@@ -97,8 +97,7 @@ Change the provScript in
 
 ```
 $provScript = <<__EOF__
-diskutil list | grep -v disk0s3 || diskutil mergePartitions HFS+ Yosemite
-disk0s2 disk0s3
+diskutil list | grep -v disk0s3 || diskutil mergePartitions HFS+ Yosemite disk0s2 disk0s3
 __EOF__
 ```
 
