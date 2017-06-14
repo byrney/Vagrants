@@ -9,6 +9,7 @@ git 'sync-osrm' do
     repository 'https://github.com/Project-OSRM/osrm-backend.git'
     destination '/home/vagrant/osrm-backend'
     user 'vagrant'
+    revision '5.5'
 end
 
 
@@ -50,21 +51,27 @@ directory '/home/vagrant/devon' do
 end
 
 remote_file '/home/vagrant/devon/devon-latest.osm.pbf' do
-    source 'http://download.geofabrik.de/europe/great-britain/england/devon-latest.osm.pbf'
-    action :create_if_missing
+    source 'http://download.geofabrik.de/europe/great-britain-latest.osm.pbf'
+    action :create
     owner 'vagrant'
+    notifies :run, 'execute[extract]'
+end
+
+template '/home/vagrant/osrm-backend/devon.lua' do
+    source 'osrm-profile.lua'
+    notifies :run, 'execute[extract]'
 end
 
 execute 'extract' do
     command 'osrm-extract -p ../osrm-backend/profile.lua devon-latest.osm.pbf'
     creates 'devon-latest.osrm'
     cwd '/home/vagrant/devon'
+    notifies :run, 'execute[contract]'
 end
 
 execute 'contract' do
     command 'osrm-contract devon-latest.osrm'
     cwd '/home/vagrant/devon'
-    creates 'devon-latest.osrm.timestamp'
 end
 
 link '/usr/bin/node' do
