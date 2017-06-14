@@ -4,6 +4,8 @@
 #
 package %W(git vim unzip curl build-essential software-properties-common )
 
+package %W(renderd gdal-bin mapnik-utils apache2 libapache2-mod-tile)
+
 #
 # osm packages + postgis
 #
@@ -20,6 +22,10 @@ end
 #
 
 package %W(cmake libexpat1 libexpat1-dev libboost-all-dev postgresql-server-dev-9.5)
+
+directory '/home/vagrant/osm' do
+    owner 'vagrant'
+end
 
 git 'osm2pgrouting-sync' do
     repository 'https://github.com/pgRouting/osm2pgrouting.git'
@@ -41,21 +47,6 @@ execute 'osm2pgr-install' do
 end
 
 package %W(libgeos-dev proj-bin osm2pgsql osmctools )
-
-#
-# renderd
-#
-package %W(renderd gdal-bin mapnik-utils apache2 libapache2-mod-tile)
-
-#
-# cartocss
-#
-package %W(nodejs npm)
-
-execute 'install carto' do
-    command "npm install -g carto"
-    creates '/usr/local/bin/carto'
-end
 
 #
 # postgres instance with postgis
@@ -167,6 +158,16 @@ execute 'osm2pgr-devon' do
     command "osm2pgrouting --f /home/vagrant/osm/devon-latest.osm -d gis -p #{port} && touch /home/vagrant/osm/routing-devon.log"
     creates '/home/vagrant/osm/routing-devon.log'
     user 'vagrant'
+end
+
+#
+# cartocss
+#
+package %W(nodejs npm)
+
+execute 'install carto' do
+    command "npm install -g carto"
+    creates '/usr/local/bin/carto'
 end
 
 #
