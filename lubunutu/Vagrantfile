@@ -1,0 +1,48 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Host
+    #
+    host_user = ENV['USER'] || ENV['USERNAME']
+    #
+    # Box
+    #
+    vm_name = Dir.pwd.split(File::SEPARATOR).last
+    config.vm.box = "halvards/lubuntu1604"
+    config.vm.box_check_update = false
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+       vb.gui = true
+       vb.memory = 2048
+       vb.name = vm_name
+       vb.linked_clone = true
+    end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = vm_name
+    config.vm.network "private_network", type: 'dhcp'
+    config.ssh.forward_x11 = true
+    config.ssh.insert_key = false
+
+    #
+    # Shared Folders
+    #
+    this_dir = File.dirname(__FILE__)
+    config.vm.synced_folder(File.join(this_dir, '..'), '/Host')
+
+    #
+    # Provision
+    #
+    #config.berkshelf.enabled = false  # use berks on the guest
+    #config.vm.provision "bootstrap", type: "shell" do |s|
+    #   s.inline = "cd /Host/#{vm_name}/; bash bootstrap.sh"
+    #end
+
+end
