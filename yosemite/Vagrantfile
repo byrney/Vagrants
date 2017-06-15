@@ -36,10 +36,10 @@ Vagrant.configure(2) do |config|
     # Provision
     #
     if(Dir.exists?(host_conf_dir))
-        config.vm.synced_folder host_conf_dir, "/Users/vagrant/Config", id: "host-config", type: "rsync"
+        config.vm.synced_folder host_conf_dir, "/Users/vagrant/Config", id: "host-config", type: "rsync", rsync__chown: false
     end
     if(Dir.exists?(host_setup_dir))
-        config.vm.synced_folder host_setup_dir, "/Users/vagrant/Setup", id: "host-setup", type: "rsync"
+        config.vm.synced_folder host_setup_dir, "/Users/vagrant/Setup", id: "host-setup", type: "rsync", rsync__chown: false
     else
         config.vm.provision(:shell, privileged: false, inline: "cd /Users/vagrant/ && git clone 'https://github.com/byrney/OsxSetup.git' Setup")
     end
