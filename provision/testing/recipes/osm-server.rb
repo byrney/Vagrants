@@ -4,7 +4,6 @@
 #
 package %W(git vim unzip curl build-essential software-properties-common )
 
-package %W(renderd gdal-bin mapnik-utils apache2 libapache2-mod-tile)
 
 #
 # osm packages + postgis
@@ -17,6 +16,7 @@ apt_repository "openstreetmap" do
     trusted true
 end
 
+package %W(renderd gdal-bin mapnik-utils apache2 libapache2-mod-tile)
 #
 # osm2pgrouting
 #
