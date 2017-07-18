@@ -1,4 +1,15 @@
 
+LOCALES='LC_ALL=en_US.UTF-8
+LANG=en_US.UTF-8'
+
+execute 'locales' do
+    command "locale-gen 'en_US.UTF-8' && echo '#{LOCALES}' > /etc/locale"
+    creates '/etc/locale'
+end
+
+ENV['LC_CTYPE'] = 'en_GB.UTF-8'
+ENV['LANG'] = 'en_GB.UTF-8'
+
 apt_update 'apt-update' do
   frequency 86400
   action :periodic
@@ -15,6 +26,7 @@ redmine redmine/instances/default/dbconfig-upgrade      boolean true
 redmine redmine/instances/default/database-type select  pgsql
 redmine redmine/instances/default/pgsql/app-pass        password hahaha
 redmine redmine/instances/default/password-confirm      password hahaha
+redmine redmine/instances/default/remote/host   select  localhost
 '
 
 # set config before redmine package install to prevent it from prompting

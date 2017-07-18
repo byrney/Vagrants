@@ -17,8 +17,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #
     # Box
     #
-    #config.vm.box = "ARTACK/debian-jessie"
-    config.vm.box = "halvards/lubuntu1604"
+    config.vm.box = "ARTACK/debian-jessie"
+    #config.vm.box = "halvards/lubuntu1604"
     #config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
     config.vm.box_check_update = false
 
