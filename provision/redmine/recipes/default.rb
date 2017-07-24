@@ -94,6 +94,13 @@ execute 'crm-plugin' do
     action :nothing
 end
 
+execute 'gant-plugin' do
+    command 'unzip /vagrant/EasyGanttFree.zip -d /usr/share/redmine/plugins'
+    cwd '/usr/share/redmine'
+    creates '/usr/share/redmine/plugins/easy_gantt'
+    notifies :run, 'execute[bundle-install]', :immediately
+end
+
 execute 'agile-plugin' do
     command 'unzip /vagrant/redmine_agile-1_4_4-light.zip -d /usr/share/redmine/plugins'
     cwd '/usr/share/redmine'
@@ -109,6 +116,12 @@ end
 
 execute 'crm-rake' do
     command '/usr/bin/bundle exec /usr/bin/rake redmine:plugins NAME=redmine_contacts RAILS_ENV=production'
+    cwd '/usr/share/redmine'
+    action :nothing
+end
+
+execute 'gant-rake' do
+    command '/usr/bin/bundle exec /usr/bin/rake redmine:plugins NAME=easy_gantt RAILS_ENV=production'
     cwd '/usr/share/redmine'
     action :nothing
 end
