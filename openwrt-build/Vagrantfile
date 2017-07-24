@@ -3,7 +3,7 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
-PACKAGES="vim collectd"
+PACKAGES="vim collectd luci"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     #
@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Provider
     #
     config.vm.provider "virtualbox" do |vb|
-        vb.gui = true
+        vb.gui = false
         vb.memory = 2048
         vb.name = Dir.pwd.split('/').last
         vb.linked_clone = true
@@ -53,9 +53,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                     ./scripts/feeds update -a && \
                     ./scripts/feeds install #{PACKAGES} && \
                     cp /vagrant/openwrt-i386-vdi.cfg /home/vagrant/openwrt/.config && \
+                    mkdir -p /home/vagrant/openwrt/files && \
+                    cp -R /vagrant/etc /home/vagrant/openwrt/files && \
                     make defconfig && make && \
                     mkdir -p /vagrant/dist && \
-                    cp -R -f -v /home/vagrant/openwrt/bin/x86 /vagrant/dist && \
+                    cd /home/vagrant/openwrt/bin/ && tar cvf /vagrant/dist/x86.tar x86 && \
                     echo copied"
     end
 
