@@ -1,0 +1,69 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+PACKAGES="vim collectd luci"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Box
+    #
+    config.vm.box = "ARTACK/debian-jessie"
+    config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
+    config.vm.box_check_update = false
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+        vb.memory = 2048
+        vb.name = Dir.pwd.split('/').last
+        vb.linked_clone = true
+        # vb.customize ["modifyvm", :id, "--vram", "256"]
+    end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = Dir.pwd.split('/').last
+
+    #
+    # Provision
+    #
+    config.vm.provision "fix-no-tty", type: "shell" do |s|
+        s.privileged = false
+        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+
+    # prerequisites as root
+    config.vm.provision "pre-requisites", type: "shell" do |s|
+        s.inline = " \
+            [[ -f /home/vagrant/apt-update.done ]] || apt-get update > /home/vagrant/apt-update.done ; \
+            apt-get install -q -y git-core build-essential libssl-dev \
+            libncurses5-dev unzip gawk zlib1g-dev \
+            subversion mercurial libssl-dev gettext file python \
+            bison flex libtool automake libmodbus5 libmodbus-dev pkg-config \
+            python3 python-pip && \
+            pip install pyModbusTCP "
+    end
+
+    config.vm.provision "collectd", type: "shell" do |s|
+        s.inline = "cd /home/vagrant && \
+                    [[ -d pyModbusTCP ]] || git clone https://github.com/sourceperl/pyModbusTCP.git && \
+                    [[ -d collectd ]] || git clone https://github.com/collectd/collectd && \
+                    cd collectd && bash build.sh && \
+                    ./configure --enable-debug --with-modbus && \
+                    make && make install && echo installed && \
+                    cd /home/vagrant && \
+                    echo && \
+                    echo done. Run: && \
+                    echo /opt/collectd/sbin/collectd -f -C /vagrant/slave.conf && \
+                    echo python pyModbusTCP/examples/server.py --host 127.0.0.1 --port 5000 && \
+                    echo "
+
+
+    end
+
+end
