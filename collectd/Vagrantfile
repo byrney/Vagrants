@@ -49,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             pip install pyModbusTCP "
     end
 
-    collectd_ver = 'master'
+    collectd_ver = 'collectd-5.4.2'
     config.vm.provision "collectd", type: "shell" do |s|
         s.inline = "cd /home/vagrant && \
                     [[ -d pyModbusTCP ]] || git clone https://github.com/sourceperl/pyModbusTCP.git && \
