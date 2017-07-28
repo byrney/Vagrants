@@ -49,21 +49,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             pip install pyModbusTCP "
     end
 
+    collectd_ver = 'master'
     config.vm.provision "collectd", type: "shell" do |s|
         s.inline = "cd /home/vagrant && \
                     [[ -d pyModbusTCP ]] || git clone https://github.com/sourceperl/pyModbusTCP.git && \
                     [[ -d collectd ]] || git clone https://github.com/collectd/collectd && \
-                    cd collectd && bash build.sh && \
-                    ./configure --enable-debug --with-modbus && \
+                    cd collectd && git checkout #{collectd_ver} && bash build.sh && \
+                    ./configure --enable-debug --with-modbus --without-perl-bindings && \
                     make && make install && echo installed && \
-                    cd /home/vagrant && \
-                    echo && \
-                    echo done. Run: && \
-                    echo /opt/collectd/sbin/collectd -f -C /vagrant/slave.conf && \
-                    echo python pyModbusTCP/examples/server.py --host 127.0.0.1 --port 5000 && \
-                    echo "
+                    cd /home/vagrant "
+    end
 
-
+    config.vm.provision "testing", type: "shell", run: 'always' do |s|
+        s.inline = "python pyModbusTCP/examples/server.py --host 127.0.0.1 --port 5000 & \
+                    sleep 2
+                    /opt/collectd/sbin/collectd -f -T -C /vagrant/slave.conf ; \
+                    kill %1 "
     end
 
 end
