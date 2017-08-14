@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provider "virtualbox" do |v|
           v.gui = true
-          v.name = "modern8"
+          v.name = "modern10"
           v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     end
 
