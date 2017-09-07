@@ -1,0 +1,64 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+PACKAGES="vim collectd luci"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Box
+    #
+    config.vm.box = "ARTACK/debian-jessie"
+    config.vm.box_url = 'https://atlas.hashicorp.com/ARTACK/boxes/debian-jessie'
+    config.vm.box_check_update = false
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+        vb.memory = 2048
+        vb.name = Dir.pwd.split('/').last
+        vb.linked_clone = true
+        # vb.customize ["modifyvm", :id, "--vram", "256"]
+    end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = Dir.pwd.split('/').last
+
+    #
+    # Provision
+    #
+    config.vm.provision "fix-no-tty", type: "shell" do |s|
+        s.privileged = false
+        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+
+    # prerequisites as root
+    config.vm.provision "pre-requisites", type: "shell" do |s|
+        s.inline = "apt-get update && apt-get install -q -y git-core build-essential libssl-dev \
+            libncurses5-dev unzip gawk zlib1g-dev \
+            subversion mercurial libssl-dev gettext file python"
+    end
+
+    # openwrt build as vagrant
+    config.vm.provision "lede", type: "shell" do |s|
+        s.privileged = false
+        s.inline = "cd /home/vagrant && \
+                    [[ -d lede ]] || git clone https://git.lede-project.org/source.git lede && \
+                    cd lede && git checkout master && \
+                    ./scripts/feeds update -a && \
+                    ./scripts/feeds install #{PACKAGES} && \
+                    cp /vagrant/openwrt-i386-vdi.cfg /home/vagrant/lede/.config && \
+                    mkdir -p /home/vagrant/lede/files && \
+                    cp -R /vagrant/etc /home/vagrant/lede/files && \
+                    make defconfig && make && \
+                    mkdir -p /vagrant/dist && \
+                    cd /home/vagrant/lede/bin/targets && tar cvf /vagrant/dist/x86.tar x86 && \
+                    echo copied"
+    end
+
+end
