@@ -53,8 +53,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                     ./scripts/feeds update -a && \
                     ./scripts/feeds install #{PACKAGES} && \
                     cp /vagrant/openwrt-i386-vdi.cfg /home/vagrant/openwrt/.config && \
-                    mkdir -p /home/vagrant/openwrt/files && \
-                    cp -R /vagrant/etc /home/vagrant/openwrt/files && \
+                    cp -R /vagrant/files /home/vagrant/openwrt && \
                     make defconfig && make && \
                     mkdir -p /vagrant/dist && \
                     cd /home/vagrant/openwrt/bin/ && tar cvf /vagrant/dist/x86.tar x86 && \
