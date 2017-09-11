@@ -39,6 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.ssh.forward_x11 = true
     config.ssh.forward_agent = true
     config.ssh.insert_key = false
+    config.vm.network 'private_network', ip: '192.168.100.2'
     config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1", id: 'port8080'
     config.vm.network "forwarded_port", guest: 9042, host: 9042, host_ip: "127.0.0.1", id: 'port9042'
 
@@ -57,6 +58,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         chef.add_recipe 'debian-base-box::xorg'
         chef.add_recipe 'debian-base-box::users'
         chef.add_recipe 'debian-dev-box::postgres'
+        chef.add_recipe 'debian-dev-box::nodejs'
         chef.json = { :users => { :username => host_user, :priv_key => priv_key, :pub_key => pub_key } }
     end
 
