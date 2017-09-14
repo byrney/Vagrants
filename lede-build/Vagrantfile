@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                     [[ -d lede ]] || git clone https://git.lede-project.org/source.git lede && \
                     cd lede && git checkout master && \
                     ./scripts/feeds update -a && \
-                    ./scripts/feeds install #{PACKAGES} && \
+                    ./scripts/feeds install -a && \
                     cp /vagrant/openwrt-i386-vdi.cfg /home/vagrant/lede/.config && \
                     mkdir -p /home/vagrant/lede/files && \
                     cp -R /vagrant/etc /home/vagrant/lede/files && \
