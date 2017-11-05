@@ -1,0 +1,20 @@
+
+
+<routes>
+
+    <vType id="car" accel="2.6" color='1,0,0' decel="4.5" sigma="0.5" length="5" maxSpeed="70"/>
+    <vType id="truck" vClass='truck' accel="3" color='0,1,0' decel="4.5" sigma="0.5" length="4" minGap="1" maxSpeed="30"/>
+    <vType id="bicycle" vClass='bicycle' accel="0.5" color='1,1,0' decel="0.8" sigma="0.5" length="3" maxSpeed="3"/>
+
+    <flows>
+        <flow id="0" type='car' to="gneE3" from="gneE11" begin="0" end="3600" number="0"/>
+        <flow id="1" type='bicycle' to="gneE7" from="gneE0" begin="0" end="3600" number="0"/>
+        <flow id="2" type='truck' from="gneE11" to="gneE3" begin="0" end="3000" number="1200"/>
+        <flow id="3" type='truck' from="gneE8" to="gneE3" begin="0" end="3600" number="0"/>
+    </flows>
+</routes>
+
+
+
+
+

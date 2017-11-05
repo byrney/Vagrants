@@ -1,0 +1,7 @@
+<configuration>
+    <input>
+       <net-file value="tee.net.xml" />
+       <additional-files value="detectors.xml"/>
+       <route-files value="tee.rou.xml" />
+    </input>
+</configuration>
