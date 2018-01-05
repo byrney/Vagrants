@@ -49,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         s.privileged = false
         s.inline = "cd /home/vagrant && \
                     [[ -d lede ]] || git clone https://git.lede-project.org/source.git lede && \
-                    cd lede && git checkout master && \
+                    cd lede && git checkout v17.01.4 && \
                     ./scripts/feeds update -a && \
                     ./scripts/feeds install -a && \
                     cp /vagrant/openwrt-i386-vdi.cfg /home/vagrant/lede/.config && \
