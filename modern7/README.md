@@ -1,5 +1,12 @@
-
 # Modern IE Vagrant Setup with Chef #
+
+This machine is not meant to be used for anything it's simply
+a way of taking the ms provided vagrant boxes for IE testing and create
+a usable box that allows remote provisioning.
+
+The images provided by MS expire after 90 days so this process will have to be
+repeated.
+
 
 1. Install Prerequisites
 2. Get the Vagrant Box for IE Modern
@@ -9,7 +16,6 @@
 ## Prerequisites ##
 
 ### Install Virtualbox ###
-
 
 
 ### Install vagrant on the host ###
@@ -30,7 +36,7 @@ or, again, use you package manager
 
 ### Install the vagrant-berkshelf-plugin ##
 
-Once vagrant is install this can be done with 
+Once vagrant is install this can be done with
 
     vagrant plugin install vagrant-berkshelf
 
@@ -42,31 +48,20 @@ more details )
 Clone this repo
 
 ```bash
-git clone https://github.com/byrney/modern
+git clone https://github.com/byrney/Vagrants
 ```
 
-change to the right directory and branch
+change to the right directory and launch the box
 
 ```bash
-    cd modern
-    git checkout chef
-```
-
-Get the box  (this may take a while)
-
-```bash
-    vagrant box add modern81 'http://aka.ms/vagrant-win81-ie11'
-```
-
-## Set up the guest ##
-
-Start the VM
-
-```bash
+    cd modern7
     vagrant up
 ```
 
-the box will start in the VirtualBox GUI but vagrant will fail because the box
+This will download the image from aka.ms and could take a couple of hours
+depending
+
+The box will start in the VirtualBox GUI but vagrant will fail because the box
 has not be set-up to allow remote access (see below for example of the error).
 
 You should see this:
@@ -106,16 +101,30 @@ net use z: \\vboxsvr\vagrant
 ```
 
 this should prep-the box for vagrant to be able to connect via winrm as user
-`vagrant`. 
+`vagrant`.
 
-It will also install chef-client by downloading the MSI from opscode
+## Configure your base box
 
-Let it reboot so that the updates get installed.
+If you're going to be using this for 90 days then you want to get as much of
+the gui-only configuration into the base image. Things like
 
-## Optionally save the prepared image ##
+* Apply as many windows updates as possible
+* Disable any unnecessary services
+* Turn off windows firewall
+* Turn off Windows Defender
+* Show file extensions in Explorer
+* Log in once as vagrant so the stock apps get set up
+* Set your language
+* ... and so on
 
-If you plan on creating many VMs with this box then it's probably worth
-updating the box in vagrant with the prepare script and updates applied.
+Let it reboot so that the updates get installed, then check for updates again
+(repeat until no more updates arrive)
+
+You can save yourself 400MB if you remove some components and optimize the
+drive in the image prior to export.
+
+
+## Save the prepared image ##
 
 1.  Shut down the VM
 
@@ -127,16 +136,16 @@ updating the box in vagrant with the prepare script and updates applied.
 
 3.  Once the box is created import it
 
-    vagrant box add --name modern8 --provider virtualbox  --force modern8.box
+    vagrant box add --name win7 --provider virtualbox  --force modern7.box
 
-Once imported this will be version 2 of your modern8 box. Next time vagrant
-starts it will use the new one.
+This will create a new box `win7` that contains all your customizations
 
-You can delete the `modern8.box` file now.
+You can delete the `modern7.box` file now.
 
 ## Start up with vagrant ##
 
-Shut down the box using the VM Gui, return to your host terminal and try
+You can now modify the Vagrantfile (or better, make a copy and modify that) to
+use `win7` box and it should complete without errors now.
 
 ```bash
 vagrant up
@@ -169,7 +178,15 @@ Bringing machine 'default' up with 'virtualbox' provider...
 
 ```
 
-The box will provision using chef-solo running the recipe in
-`winbase/recipes/default.rb`
+## Repeat
+
+The `modern7` box registered with vagrant is the original ms image without
+activation so issuing
+
+    vagrant destroy -f && vagrant up
+
+in the modern8 folder will get you back to the beginning of this sequence so
+you can generate a new win81 after 90 days. This skips the download but, of
+course, the manual steps to configure the image will have to be repeated.
 
 
