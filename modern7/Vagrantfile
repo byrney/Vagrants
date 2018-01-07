@@ -15,9 +15,9 @@ Vagrant.configure(2) do |config|
           v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     end
 
-    config.ssh username = 'IEUser'
-    config.ssh.password = 'Passw0rd!'
-    config.ssh.insert_key = false
+    # config.ssh username = 'IEUser'
+    # config.ssh.password = 'Passw0rd!'
+    # config.ssh.insert_key = false
 
     # config.vm.provision(:shell, path: "../provision/disable-browser-choice.ps1")
     # config.vm.provision(:shell, path: "../provision/disable-windows-key.ps1")

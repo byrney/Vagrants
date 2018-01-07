@@ -24,7 +24,7 @@ Either download it from here
 
     https://www.vagrantup.com/downloads
 
-or use you package manager of choice
+or use your package manager of choice
 
 ### Install chef dev kit on the host ###
 
@@ -32,7 +32,7 @@ Download from opscode
 
     https://downloads.chef.io/chef-dk/
 
-or, again, use you package manager
+or, again, use your package manager
 
 ### Install the vagrant-berkshelf-plugin ##
 
@@ -132,7 +132,7 @@ drive in the image prior to export.
 
 2.  Back on the host, Export/Package the box
 
-    vagrant package --base modern8 --out modern8.box
+    vagrant package --base modern7 --out modern7.box
 
 3.  Once the box is created import it
 
