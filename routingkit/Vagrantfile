@@ -1,0 +1,61 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    #
+    # Host
+    #
+    host_user = ENV['USER'] || ENV['USERNAME']
+    #
+    # Box
+    #
+    config.vm.box = "debian/contrib-stretch64"
+    config.vm.box_check_update = false
+
+    #
+    # Provider
+    #
+    config.vm.provider "virtualbox" do |vb|
+       #vb.gui = true
+       vb.memory = 4096
+       vb.name = Dir.pwd.split('/').last
+       vb.linked_clone = true
+    end
+
+    #
+    # Networking
+    #
+    config.vm.hostname = Dir.pwd.split('/').last
+    config.vm.network "private_network", type: 'dhcp'
+    config.ssh.forward_x11 = true
+    config.ssh.insert_key = false
+#    config.vm.network "forwarded_port", guest: 80, host: 4321, host_ip: "127.0.0.1"
+
+    #
+    # Shared folders
+    #
+    config.vm.synced_folder("/Users/#{host_user}", '/Host')
+    #
+    # Provision
+    #
+    config.vm.provision "fix-no-tty", type: "shell" do |s|
+        s.privileged = false
+        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+
+    config.vm.provision "chef_solo" do |chef|
+        chef.add_recipe 'debian-base-box::init'
+        chef.channel = 'stable'
+    end
+
+    #config.vm.provision(:shell, path: '../provision/mono.sh')
+    #config.vm.provision("powa", type: :shell, path: '../provision/powa.sh')
+
+
+
+
+
+end
