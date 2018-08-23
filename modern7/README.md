@@ -103,6 +103,12 @@ net use z: \\vboxsvr\vagrant
 this should prep-the box for vagrant to be able to connect via winrm as user
 `vagrant`.
 
+After the restart check that:
+
+* winrm service is started automatically (not Delayed)
+* network connections are set to private
+* you can login as vagrant:vagrant
+
 ## Configure your base box
 
 If you're going to be using this for 90 days then you want to get as much of
